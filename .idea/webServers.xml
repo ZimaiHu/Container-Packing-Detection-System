@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="87545745-a785-43bf-89ba-686f4cc29b6d" name="智能审单">
+        <fileTransfer rootFolder="/home/ubuntu" accessType="SFTP" host="124.223.1.212" port="22" sshConfigId="146c4fad-9b8e-4719-a0e0-70282b964e7e" sshConfig="ubuntu@124.223.1.212:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
