@@ -55,7 +55,8 @@ Container-Packing-Detection-System
 > 原因：在检测程序部分算法模型的网络结构未提前加载，影响检测速度
 >
 > 解决办法：修复算法
->
+>![5d43a2d4a4aa3eb488d4462cf136290](https://github.com/weijing213/Container-Packing-Detection-System/assets/8722237/374d1c3d-513f-4e38-8041-0a5bb62498ed)
+
 > 初步测试情况：
 >
 > |                                                 | 总时间 |
