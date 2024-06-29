@@ -19,7 +19,7 @@ class CargoLabelDetector:
         self.model_cargo = YOLO(model_path[0])
         self.model_shouxie = YOLO(model_path[1])
         self.ocr_recognition = pipeline(Tasks.ocr_recognition, model=model_path[2])
-        self.ocr = PaddleOCR(use_angle_cls=True, lang='en', use_gpu=True, gpu_mem=8000, gpu_id=3)
+        self.ocr = PaddleOCR(use_angle_cls=True, lang='en', use_gpu=True, gpu_mem=8000)
 #主探测函数
     def detect_cargo_label(self, img_path, min_confidence=0.65):
         image = cv2.imread(img_path)
@@ -37,6 +37,13 @@ class CargoLabelDetector:
         img = cv2.imread(img_path)
 
         results = self.process_detections(detected_goods_and_labels, img, min_confidence)
+        for item in results:
+            labelingood = item['labelingood']
+            if len(labelingood) > 1:
+                valid_labels = [label for label in labelingood if len(label['ocr_result']) > 3]
+                if len(valid_labels) > 1:
+                    labelingood = [max(valid_labels, key=lambda x: len(x['ocr_result']))]
+            item['labelingood'] = labelingood
         return results
 #手写识别
     def crop_and_ocr(self, image):
@@ -76,12 +83,19 @@ class CargoLabelDetector:
                             cropped_image = img[int(label_row['ymin']):int(label_row['ymax']),
                                             int(label_row['xmin']):int(label_row['xmax'])]
                             label_text = self.recognize_text_paddleocr(cropped_image)
-                            if not label_text or len(label_text) < 2:
+                            print(counter)
+                            print(label_text)
+                            print(len(label_text))
+
+                            if ('C' in label_text or 'c' in label_text) and (len(label_text))<10:
                                 label_text = self.crop_and_ocr(cropped_image)
-                            if len(label_text) > 4:
-                                label_text = self.recognize_text_paddleocr(cropped_image)
-                                label_text = self.format_extracted_number(label_text)
-                                label_text = label_text.replace(".", "")
+                            else:
+                                if not label_text or len(label_text) < 2:
+                                    label_text = self.crop_and_ocr(cropped_image)
+                                if len(label_text) > 4:
+                                    label_text = self.recognize_text_paddleocr(cropped_image)
+                                    label_text = self.format_extracted_number(label_text)
+                                    label_text = label_text.replace(".", "")
                             label_text = re.findall(r'\d+', label_text)
                             label_text = ''.join(label_text)
                             label_info = {
@@ -98,15 +112,21 @@ class CargoLabelDetector:
         return overlapping_objects
 #正则变换
     def format_extracted_number(self, text):
-        matches = re.findall(r'(?<!\d)\d+\.\d+\.\d+(?!\d)', text)
-        if matches:
-            match = matches[0]
-            parts = match.split('.')
-            if len(parts) == 3:
-                formatted_number = f"{parts[0][-3:]}.{parts[1]}.{parts[2][:2]}"
-                return formatted_number
+        parts = text.split()
+        # 存储符合条件的部分
+        valid_numbers = []
+        if parts:
+            # 遍历每个部分
+            for part in parts:
+                # 提取部分中的数字
+                number = ''.join(re.findall(r'\d', part))
+                if len(number) == 8:
+                    valid_numbers.append(number)
+            # 返回符合条件的数字部分
+            return ' '.join(valid_numbers)
         return ""
-#paddle识别
+
+    #paddle识别
     def recognize_text_paddleocr(self, image):
         result = self.ocr.ocr(image, cls=True)
         if result[0] is None:
