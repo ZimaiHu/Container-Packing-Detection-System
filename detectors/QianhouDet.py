@@ -19,7 +19,7 @@ class QianhouDetector:
         self.model_cargo = YOLO(model_path[0])
         self.model_shouxie = YOLO(model_path[1])
         self.ocr_recognition = pipeline(Tasks.ocr_recognition, model=model_path[2])
-        self.ocr = PaddleOCR(use_angle_cls=True, lang='en', use_gpu=True, gpu_mem=8000, gpu_id=3)
+        self.ocr = PaddleOCR(use_angle_cls=True, lang='en', use_gpu=True, gpu_mem=4000)
 #主探测函数
     def detect_qianhou(self, img_path, min_confidence=0.65):
         image = cv2.imread(img_path)

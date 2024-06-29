@@ -43,10 +43,10 @@ class StrapDetector:
                        (180 - self.max_angle_deg) <= np.abs(angle) <= (180 - self.min_angle_deg):
                         straps_present = True
                         # Determine the bounding box coordinates
-                        xmin = int(min(x1, x2))
-                        ymin = int(min(y1, y2))
-                        xmax = int(max(x1, x2))
-                        ymax = int(max(y1, y2))
+                        xmin = x1
+                        ymin = y1
+                        xmax = x2
+                        ymax = y2
                         strap_info = {
                             'xmin': xmin,
                             'ymin': ymin,
