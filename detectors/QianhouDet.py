@@ -98,14 +98,22 @@ class QianhouDetector:
         return overlapping_objects
 #正则变换
     def format_extracted_number(self, text):
-        matches = re.findall(r'(?<!\d)\d+\.\d+\.\d+(?!\d)', text)
-        if matches:
-            match = matches[0]
-            parts = match.split('.')
-            if len(parts) == 3:
-                formatted_number = f"{parts[0][-3:]}.{parts[1]}.{parts[2][:2]}"
-                return formatted_number
+        parts = text.split()
+        valid_numbers = []
+        dot_part = None
+        if parts:
+            for part in parts:
+                number = ''.join(re.findall(r'\d', part))
+                if len(number) == 8:
+                    valid_numbers.append(part)
+                    if '.' in part:
+                        dot_part = part
+
+            if len(valid_numbers) == 2 and dot_part:
+                return dot_part
+            return ' '.join([''.join(re.findall(r'\d', part)) for part in valid_numbers])
         return ""
+
 #paddle识别
     def recognize_text_paddleocr(self, image):
         result = self.ocr.ocr(image, cls=True)

@@ -29,16 +29,16 @@ class ChaituoDetector:
         if img is None:
             raise ValueError(f"图像加载失败: {img_path}")
 
-         #修改，对图片进行裁剪
-        height, width, _ = img.shape
-
-        # 计算裁剪区域
-        start_row = height // 3
-        end_row = 2 * height // 3
-        start_col = width // 3
-        end_col = 2 * width // 3
-
-        img = img[start_row:end_row, start_col:end_col]
+        #  #修改，对图片进行裁剪
+        # height, width, _ = img.shape
+        #
+        # # 计算裁剪区域
+        # start_row = height // 3
+        # end_row = 2 * height // 3
+        # start_col = width // 3
+        # end_col = 2 * width // 3
+        #
+        # img = img[start_row:end_row, start_col:end_col]
 
         if self.ocr is None:
             self.load_model()
@@ -65,15 +65,20 @@ class ChaituoDetector:
 
     # 正则变换
     def format_extracted_number(self, text):
-        """ 从文本中提取并格式化一个带有两个小数点的数字序列 """
-        matches = re.findall(r'(?<!\d)\d+\.\d+\.\d+(?!\d)', text)
-        if matches:
-            match = matches[0]
-            parts = match.split('.')
-            if len(parts) == 3:
-                # 格式化提取的数字为: 三位数.三位数.两位数
-                formatted_number = f"{parts[0][-3:]}.{parts[1]}.{parts[2][:2]}"
-                return formatted_number
-        return ""  # 如果没有匹配项，则返回空字符串
+        parts = text.split()
+        valid_numbers = []
+        dot_part = None
+        if parts:
+            for part in parts:
+                number = ''.join(re.findall(r'\d', part))
+                if len(number) == 8:
+                    valid_numbers.append(part)
+                    if '.' in part:
+                        dot_part = part
+
+            if len(valid_numbers) == 2 and dot_part:
+                return dot_part
+            return ' '.join([''.join(re.findall(r'\d', part)) for part in valid_numbers])
+        return ""
 
  

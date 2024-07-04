@@ -7,9 +7,17 @@
 @Introduce:
 """
 # 模型路径
-v2h_model_path = "models/container_number/container_number_v2h.pt"
-# v2h_model_path = "models/container_number/container_number_v2h_2.pt"
-ocr_model_path = "models/ocr/cv_crnn_ocr-recognition-general_damo"
-# region_model_path = "models/container_number/container_number_region.pt"
-region_model_path = "models/container_number/container_number_four.pt"
-patch_model_path = "models/container_number/container_number_v2h.pt"
+# region_model_path = "models/container_number/container_number_region_4.pt"       # v0 优秀
+# region_model_path_obb = "models/container_number/container_number_region_obb_7_2.pt"   # v1_obb
+# region_model_path = "models/container_number/container_number_region_4.pt"
+# patch_model_path = "models/container_number/container_number_patch.pt"       # v0
+# patch_model_path = "models/container_number/container_number_patch_7_2.pt"   # v1 优秀
+
+# ocr_model_path = "models/ocr/cv_crnn_ocr-recognition-general_damo"           # v0
+# ocr_model_path = "/home/daoes/wangshuo/MyProject/YiJia/models/ocr/ocr_funeting"   # v1 优秀
+
+# 使用版
+region_model_path = "models/container_number/container_number_region_5_7_3.pt"
+patch_model_path = ["models/container_number/container_number_patch_shu_7_3.pt",
+                    "models/container_number/container_number_patch_heng_7_3.pt"]
+ocr_model_path = "models/ocr/ocr_funeting"

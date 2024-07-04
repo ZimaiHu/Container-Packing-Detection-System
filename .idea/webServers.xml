@@ -9,6 +9,13 @@
           </advancedOptions>
         </fileTransfer>
       </webServer>
+      <webServer id="01f8d9e8-a151-41fe-8997-d3c181108143" name="苏州智能审单">
+        <fileTransfer accessType="SFTP" host="119.45.164.8" port="22" sshConfigId="54d7e496-c1ec-4ab2-89e1-906eed1435f1" sshConfig="ubuntu@119.45.164.8:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
     </option>
   </component>
 </project>

@@ -19,7 +19,8 @@ class CargoLabelDetector:
         self.model_cargo = YOLO(model_path[0])
         self.model_shouxie = YOLO(model_path[1])
         self.ocr_recognition = pipeline(Tasks.ocr_recognition, model=model_path[2])
-        self.ocr = PaddleOCR(use_angle_cls=True, lang='en', use_gpu=True, gpu_mem=8000)
+        self.ocr = PaddleOCR(use_angle_cls=True, lang='en', use_gpu=True, gpu_mem=8000,det_model_dir='weights/ch_PP-OCRv4_det_infer')
+        self.model_guanjianzi=YOLO("weights/guanjianzi.pt")
 #主探测函数
     def detect_cargo_label(self, img_path, min_confidence=0.65):
         image = cv2.imread(img_path)
@@ -76,6 +77,8 @@ class CargoLabelDetector:
                     'labelingood': []
                 }
                 counter += 1
+                normal_labels = []
+                dismantle_labels = []
                 for _, label_row in detected_objects.iterrows():
                     if label_row['class'] == 1 and label_row['confidence'] >= min_confidence:
                         if (row['xmin'] < label_row['xmax'] and row['xmax'] > label_row['xmin'] and
@@ -85,45 +88,68 @@ class CargoLabelDetector:
                             label_text = self.recognize_text_paddleocr(cropped_image)
                             print(counter)
                             print(label_text)
-                            print(len(label_text))
-
-                            if ('C' in label_text or 'c' in label_text) and (len(label_text))<10:
+                            print("-------")
+                            k = label_text.replace(" ", "")
+                            if not label_text or len(k) < 5:
                                 label_text = self.crop_and_ocr(cropped_image)
+                                print("进入拆托")
+                                label_type = '0'  # 拆托标签
                             else:
-                                if not label_text or len(label_text) < 2:
-                                    label_text = self.crop_and_ocr(cropped_image)
-                                if len(label_text) > 4:
-                                    label_text = self.recognize_text_paddleocr(cropped_image)
-                                    label_text = self.format_extracted_number(label_text)
-                                    label_text = label_text.replace(".", "")
-                            label_text = re.findall(r'\d+', label_text)
-                            label_text = ''.join(label_text)
+                                label_text = self.recognize_text_paddleocr(cropped_image)
+                                label_text = self.format_extracted_number(label_text)
+                                label_type = '1'#正常标签
+                                if len(label_text)==0:
+                                    print("进入框选")
+                                    results = self.model_guanjianzi.predict(source=cropped_image, show=False, save=False, verbose=False)[0]
+                                    coord_list = results.boxes.xyxy.tolist()
+                                    if coord_list:  # 确保coord_list不为空
+                                        x1, y1, x2, y2 = map(int, coord_list[0])
+                                        guanjianzi_img = cropped_image[y1:y2, x1:x2]
+                                        # cv2.imwrite(f'guanjianzi_img{counter}.jpg', guanjianzi_img)
+                                        label_text = self.ocr_recognition(guanjianzi_img)['text'][0]
+                                        # label_text=self.recognize_text_paddleocr(guanjianzi_img)
+                                        label_text = label_text.replace(".", "")
+                                    else:
+                                        label_text=""
                             label_info = {
                                 'label_id': counter,
                                 'xmin': label_row['xmin'],
                                 'ymin': label_row['ymin'],
                                 'xmax': label_row['xmax'],
                                 'ymax': label_row['ymax'],
-                                'ocr_result': label_text if label_text else ""
+                                'ocr_result': label_text if label_text else "",
                             }
-                            overlapping_info['labelingood'].append(label_info)
+                            if label_type == '1':
+                                normal_labels.append(label_info)
+                            else:
+                                dismantle_labels.append(label_info)
                             counter += 1
+                # 过滤标签信息，确保每个货物最多保留一个正常货物标签和一个拆托标签
+                filtered_labels = []
+                if normal_labels:
+                    normal_labels.sort(key=lambda x: len(x['ocr_result']), reverse=True)
+                    filtered_labels.append(normal_labels[0])  # 保留最长的正常货物标签
+                if dismantle_labels:
+                    filtered_labels.append(dismantle_labels[0])  # 保留一个拆托标签
+                overlapping_info['labelingood'] = filtered_labels
                 overlapping_objects.append(overlapping_info)
         return overlapping_objects
-#正则变换
+    #正则变换
     def format_extracted_number(self, text):
         parts = text.split()
-        # 存储符合条件的部分
         valid_numbers = []
+        dot_part = None
         if parts:
-            # 遍历每个部分
             for part in parts:
-                # 提取部分中的数字
                 number = ''.join(re.findall(r'\d', part))
                 if len(number) == 8:
-                    valid_numbers.append(number)
-            # 返回符合条件的数字部分
-            return ' '.join(valid_numbers)
+                    valid_numbers.append(part)
+                    if '.' in part:
+                        dot_part = part
+
+            if len(valid_numbers) == 2 and dot_part:
+                return dot_part
+            return ' '.join([''.join(re.findall(r'\d', part)) for part in valid_numbers])
         return ""
 
     #paddle识别
