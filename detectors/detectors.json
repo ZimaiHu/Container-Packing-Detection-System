@@ -1,0 +1,36 @@
+{
+  "CargoLabel": {
+    "model_path": [
+      "weights/cargolabel.pt",
+      "weights/shouxie.pt",
+      "detectors/CargoLabel/cv_convnextTiny_ocr-recognition-handwritten_damo"
+    ],
+    "comment": "hw"
+  },
+    "PalletCorner": {
+    "model_path": [
+      "weights/tuojiao.pt"
+    ],
+    "comment": "tj"
+  },
+    "Seal": {
+    "model_path": [
+      "weights/fengtiao.pt"
+    ],
+    "comment": "ft"
+  },
+    "Fod": {
+    "model_path": [
+      "weights/fod.pt"
+    ],
+    "comment": "yw"
+  },
+   "Qianhou": {
+    "model_path": [
+      "weights/qianhou.pt",
+      "weights/shouxie.pt",
+      "detectors/CargoLabel/cv_convnextTiny_ocr-recognition-handwritten_damo"
+    ],
+    "comment": "hw"
+  }
+}
