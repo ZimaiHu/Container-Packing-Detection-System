@@ -81,7 +81,11 @@ def submit():
     elif id == "8":
         result_dict = detector.detect_all(url, "8")
         print(result_dict)
-        print("遮挡检测")
+        print("前后遮挡检测")
+    elif id == "9":
+        result_dict = detector.detect_all(url, "9")
+        print(result_dict)
+        print("货柜遮挡检测")
     else:
         result_dict = "无结果"
 
