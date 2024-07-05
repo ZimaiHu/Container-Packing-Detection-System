@@ -7,6 +7,14 @@
     ],
     "comment": "hw"
   },
+  "Zhedang": {
+    "model_path": [
+      "weights/zhedang.pt",
+      "weights/shouxie.pt",
+      "detectors/CargoLabel/cv_convnextTiny_ocr-recognition-handwritten_damo"
+    ],
+    "comment": "zd"
+  },
     "PalletCorner": {
     "model_path": [
       "weights/tuojiao.pt"
