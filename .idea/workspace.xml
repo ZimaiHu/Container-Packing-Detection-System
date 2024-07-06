@@ -4,12 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b1936a3d-1720-422b-9ec3-c51baefd814a" name="Changes" comment="">
+    <list default="true" id="b1936a3d-1720-422b-9ec3-c51baefd814a" name="Changes" comment="update bangdai detection">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/detector.py" beforeDir="false" afterPath="$PROJECT_DIR$/detector.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/detectors/StrapDet.py" beforeDir="false" afterPath="$PROJECT_DIR$/detectors/StrapDet.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/detectors/detectors.json" beforeDir="false" afterPath="$PROJECT_DIR$/detectors/detectors.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,6 +25,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 4
@@ -205,8 +204,17 @@
       <workItem from="1720086357941" duration="1060000" />
       <workItem from="1720141657691" duration="32000" />
       <workItem from="1720251452501" duration="4001000" />
-      <workItem from="1720256696958" duration="11277000" />
+      <workItem from="1720256696958" duration="11928000" />
     </task>
+    <task id="LOCAL-00001" summary="update bangdai detection">
+      <option name="closed" value="true" />
+      <created>1720281459282</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1720281459282</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -248,10 +256,14 @@
       </map>
     </option>
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="update bangdai detection" />
+    <option name="LAST_COMMIT_MESSAGE" value="update bangdai detection" />
+  </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Container_Packing_Detection_System$detector.coverage" NAME="detector Coverage Results" MODIFIED="1720273046331" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Container_Packing_Detection_System$registry.coverage" NAME="registry Coverage Results" MODIFIED="1720256494650" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="E:/Users/Tigre/anaconda3/envs/ocrtest/Lib/site-packages/modelscope/utils" />
-    <SUITE FILE_PATH="coverage/Container_Packing_Detection_System$app.coverage" NAME="app Coverage Results" MODIFIED="1720281209674" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Container_Packing_Detection_System$app.coverage" NAME="app Coverage Results" MODIFIED="1720281370259" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Container_Packing_Detection_System$main.coverage" NAME="main Coverage Results" MODIFIED="1720087660831" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Container_Packing_Detection_System$StrapDet.coverage" NAME="StrapDet Coverage Results" MODIFIED="1720281190548" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/detectors" />
     <SUITE FILE_PATH="coverage/Container_Packing_Detection_System$StrapDetNew.coverage" NAME="StrapDetNew Coverage Results" MODIFIED="1720280738004" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/detectors" />
