@@ -7,6 +7,7 @@
     ],
     "comment": "hw"
   },
+
   "Zhedang": {
     "model_path": [
       "weights/zhedang.pt",
@@ -40,5 +41,12 @@
       "detectors/CargoLabel/cv_convnextTiny_ocr-recognition-handwritten_damo"
     ],
     "comment": "hw"
+  },
+     "Strap": {
+    "model_path": [
+      "weights/cargolabel.pt",
+      "weights/bangdai.pt"
+    ],
+    "comment": "bd"
   }
 }

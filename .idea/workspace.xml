@@ -5,144 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b1936a3d-1720-422b-9ec3-c51baefd814a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Container-Packing-Detection-System.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/0141.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/0333.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/0337.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/1-1.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/1-2.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/12.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/1345.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/2-1.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/2-2.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/2.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/20240604.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/202406261.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/202406262.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/210e.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/22a.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/298.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/3-1.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/3-2.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/331.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/332.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/3323.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/333.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/335.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/3d.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/4.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/429.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/444.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/4766.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/521.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/59a.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/617.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/6279.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/666.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/684.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/6947.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/80e.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/937.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/96c.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/9832.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/C1-M.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/be9.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/c1.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/c2-jie.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/c2.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/c3.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/c40.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/c8f.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/d04c.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/img.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/lll.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/shu.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/shutest.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/zhedang.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ceshitu/zhedangceshi.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/containumber/manager.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/containumber/models/container_number/container_number_division.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/containumber/models/container_number/container_number_four.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/containumber/models/container_number/container_number_patch_heng_7_3.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/containumber/models/container_number/container_number_patch_shu_7_3.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/containumber/models/container_number/container_number_region.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/containumber/models/container_number/container_number_region_2.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/containumber/models/container_number/container_number_region_4.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/containumber/models/container_number/container_number_region_5_7_3.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/containumber/models/container_number/container_number_three.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/containumber/models/container_number/container_number_v2h.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/containumber/models/container_number/container_number_v2h_2.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/containumber/models/ocr/cv_crnn_ocr-recognition-general_damo/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/containumber/models/ocr/cv_crnn_ocr-recognition-general_damo/configuration.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/containumber/models/ocr/cv_crnn_ocr-recognition-general_damo/model.onnx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/containumber/models/ocr/cv_crnn_ocr-recognition-general_damo/pytorch_model.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/containumber/models/ocr/cv_crnn_ocr-recognition-general_damo/quickstart.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/containumber/models/ocr/cv_crnn_ocr-recognition-general_damo/vocab.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/containumber/models/ocr/ocr_funeting/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/containumber/models/ocr/ocr_funeting/configuration.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/containumber/models/ocr/ocr_funeting/epoch_100.pth" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/containumber/models/ocr/ocr_funeting/eval_result.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/containumber/models/ocr/ocr_funeting/model.onnx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/containumber/models/ocr/ocr_funeting/pytorch_model.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/containumber/models/ocr/ocr_funeting/quickstart.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/containumber/models/ocr/ocr_funeting/vocab.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/containumber/src/config.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/containumber/src/container_number/container_number_detector.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/containumber/src/container_number/container_number_ocr.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/containumber/src/container_number/container_number_patch.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/containumber/src/container_number/container_number_region.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/containumber/utils.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/detect/AlgorithmManager.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/detect/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/detect/model/TuoPan.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/detect/model/best.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/detect/model/xiang.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/detector.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/detectors/CargoLabel/cv_convnextTiny_ocr-recognition-handwritten_damo/.gitattributes" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/detectors/CargoLabel/cv_convnextTiny_ocr-recognition-handwritten_damo/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/detectors/CargoLabel/cv_convnextTiny_ocr-recognition-handwritten_damo/.idea/cv_convnextTiny_ocr-recognition-handwritten_damo.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/detectors/CargoLabel/cv_convnextTiny_ocr-recognition-handwritten_damo/.idea/deployment.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/detectors/CargoLabel/cv_convnextTiny_ocr-recognition-handwritten_damo/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/detectors/CargoLabel/cv_convnextTiny_ocr-recognition-handwritten_damo/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/detectors/CargoLabel/cv_convnextTiny_ocr-recognition-handwritten_damo/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/detectors/CargoLabel/cv_convnextTiny_ocr-recognition-handwritten_damo/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/detectors/CargoLabel/cv_convnextTiny_ocr-recognition-handwritten_damo/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/detectors/CargoLabel/cv_convnextTiny_ocr-recognition-handwritten_damo/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/detectors/CargoLabel/cv_convnextTiny_ocr-recognition-handwritten_damo/configuration.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/detectors/CargoLabel/cv_convnextTiny_ocr-recognition-handwritten_damo/pytorch_model.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/detectors/CargoLabel/cv_convnextTiny_ocr-recognition-handwritten_damo/quickstart.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/detectors/CargoLabel/cv_convnextTiny_ocr-recognition-handwritten_damo/resources/ConvTransformer-Pipeline.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/detectors/CargoLabel/cv_convnextTiny_ocr-recognition-handwritten_damo/resources/rec_result_visu.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/detectors/CargoLabel/cv_convnextTiny_ocr-recognition-handwritten_damo/vocab.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/detectors/CargoLabelDet.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/detectors/ChaituoDet.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/detectors/FodsDet.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/detectors/PalletCornerDet.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/detectors/QianhouDet.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/detectors/SealDet.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/detectors/StrapDet.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/detectors/ZheDangDet.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/detectors/detectors.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/weights/cargolabel.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/weights/cargolabel26.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/weights/cargolabel28.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/weights/ch_PP-OCRv4_det_infer/inference.pdiparams" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/weights/ch_PP-OCRv4_det_infer/inference.pdiparams.info" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/weights/ch_PP-OCRv4_det_infer/inference.pdmodel" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/weights/fengtiao.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/weights/fod.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/weights/guanjianzi.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/weights/qianhou.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/weights/shouxie.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/weights/tuojiao.pt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/weights/zhedang.pt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/detector.py" beforeDir="false" afterPath="$PROJECT_DIR$/detector.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/detectors/StrapDet.py" beforeDir="false" afterPath="$PROJECT_DIR$/detectors/StrapDet.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/detectors/detectors.json" beforeDir="false" afterPath="$PROJECT_DIR$/detectors/detectors.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -173,12 +40,15 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;Python.StrapDet.executor&quot;: &quot;Run&quot;,
+    &quot;Python.StrapDetNew.executor&quot;: &quot;Run&quot;,
     &quot;Python.app.executor&quot;: &quot;Run&quot;,
+    &quot;Python.detector.executor&quot;: &quot;Run&quot;,
     &quot;Python.main.executor&quot;: &quot;Run&quot;,
     &quot;Python.registry.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/Users/Tigre/Documents/GitHub/Container-Packing-Detection-System&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Tigre/Desktop/abc&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -189,11 +59,39 @@
   }
 }</component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Users\Tigre\Documents\GitHub\Container-Packing-Detection-System\ceshitu" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Users\Tigre\Documents\GitHub\Container-Packing-Detection-System\detectors" />
+      <recent name="D:\Users\Tigre\Documents\GitHub\Container-Packing-Detection-System\weights" />
       <recent name="D:\Users\Tigre\Documents\GitHub\Container-Packing-Detection-System" />
     </key>
   </component>
   <component name="RunManager" selected="Python.app">
+    <configuration name="StrapDetNew" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Container-Packing-Detection-System" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/detectors" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/detectors/StrapDetNew.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="app" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Container-Packing-Detection-System" />
       <option name="ENV_FILES" value="" />
@@ -271,7 +169,7 @@
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
@@ -282,6 +180,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.app" />
+        <item itemvalue="Python.StrapDetNew" />
         <item itemvalue="Python.registry" />
         <item itemvalue="Python.main" />
       </list>
@@ -306,7 +205,7 @@
       <workItem from="1720086357941" duration="1060000" />
       <workItem from="1720141657691" duration="32000" />
       <workItem from="1720251452501" duration="4001000" />
-      <workItem from="1720256696958" duration="1502000" />
+      <workItem from="1720256696958" duration="11277000" />
     </task>
     <servers />
   </component>
@@ -350,8 +249,11 @@
     </option>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/Container_Packing_Detection_System$detector.coverage" NAME="detector Coverage Results" MODIFIED="1720273046331" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Container_Packing_Detection_System$registry.coverage" NAME="registry Coverage Results" MODIFIED="1720256494650" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="E:/Users/Tigre/anaconda3/envs/ocrtest/Lib/site-packages/modelscope/utils" />
-    <SUITE FILE_PATH="coverage/Container_Packing_Detection_System$app.coverage" NAME="app Coverage Results" MODIFIED="1720267959018" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Container_Packing_Detection_System$app.coverage" NAME="app Coverage Results" MODIFIED="1720281209674" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Container_Packing_Detection_System$main.coverage" NAME="main Coverage Results" MODIFIED="1720087660831" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Container_Packing_Detection_System$StrapDet.coverage" NAME="StrapDet Coverage Results" MODIFIED="1720281190548" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/detectors" />
+    <SUITE FILE_PATH="coverage/Container_Packing_Detection_System$StrapDetNew.coverage" NAME="StrapDetNew Coverage Results" MODIFIED="1720280738004" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/detectors" />
   </component>
 </project>

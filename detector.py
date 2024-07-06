@@ -1,13 +1,14 @@
 import json
 from detectors.CargoLabelDet import CargoLabelDetector
 from detectors.PalletCornerDet import PalletDetector
-from detectors.StrapDet import StrapDetector
+# from detectors.StrapDet import StrapDetector
 from detectors.SealDet import SealDetector
 from detectors.ChaituoDet import ChaituoDetector
 from detectors.FodsDet import FodsDetector
 from detectors.QianhouDet import QianhouDetector
 from containumber.manager import Manager
 from detectors.ZheDangDet import ZheDangDetector
+from detectors.StrapDet import StrapDetector
 with open('detectors/detectors.json', 'r') as file:
     detectors = json.load(file)
 class Detector:
@@ -31,6 +32,7 @@ class Detector:
         FodsDetPath = detectors["Fod"]["model_path"]
         QianhouPath = detectors["Qianhou"]["model_path"]
         ZhedangPath = detectors["Zhedang"]["model_path"]
+        BangdaiPath = detectors["Strap"]["model_path"]
         self.CargoLabel.load_model(CargoLabelPath)
         self.PalletCorner.load_model(PalletCornerPath)
         self.SealDet.load_model(SealDetPath)
@@ -38,6 +40,7 @@ class Detector:
         self.FodsDet.load_model(FodsDetPath)
         self.Qianhou.load_model(QianhouPath)
         self.Zhedang.load_model(ZhedangPath)
+        self.StrapDet.load_model(BangdaiPath)
     # 通用检测器：通过检测任务调用
     def detect_all(self, img,task):
         if task == "1":
