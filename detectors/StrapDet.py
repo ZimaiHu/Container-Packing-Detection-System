@@ -24,18 +24,31 @@ class StrapDetector:
         self.model_strap = YOLO(model_path[1])
         self.model_strap.predict(_dummy_image, verbose=False)
 
-    def detect_strap(self, img_path):
+    def detect_strap(self, img_path, draw=False):
+        strap_positions = self.extract_strap_info(img_path)
 
-        strap_position= self.extract_strap_info(img_path)
+        # 转换 strap_positions 数据格式 为数据库需要的方式
+        strap_bboxes = [
+            {
+                'xmin': int(min(strap['x1'], strap['x2'])),
+                'ymin': int(min(strap['y1'], strap['y2'])),
+                'xmax': int(max(strap['x1'], strap['x2'])),
+                'ymax': int(max(strap['y1'], strap['y2']))
+            }
+            for strap in strap_positions
+        ]
 
         # 获取箱子坐标
-        box_position = self.extract_box_info(img_path)
+        box_positions = self.extract_box_info(img_path)
 
         # 检测箱子上是否有绑带
-        any_box_without_strap, box_intersections = self.check_strap_intersects_box(box_position, strap_position)
-        print("any_box_without_strap, box_intersections", any_box_without_strap, box_intersections)
+        any_box_without_strap, box_intersections = self.check_strap_intersects_box(box_positions, strap_positions)
 
-        return any_box_without_strap
+        # 根据draw参数决定是否画出结果
+        if draw:
+            self.draw_boxes_and_straps(img_path, box_positions, strap_positions)
+
+        return any_box_without_strap, strap_bboxes
 
     def extract_strap_info(self, img_path):
         image = cv2.imread(img_path)
@@ -44,21 +57,21 @@ class StrapDetector:
 
         strap_results = []
         for index, coords in enumerate(strap_coordinates):
+            avg_x1 = (coords[0][0] + coords[1][0]) / 2
+            avg_y1 = (coords[0][1] + coords[1][1]) / 2
+            avg_x2 = (coords[2][0] + coords[3][0]) / 2
+            avg_y2 = (coords[2][1] + coords[3][1]) / 2
+
             strap_info = {
-                'strap_id': index + 1,  # 绳子编号，从1开始
-                'x1': coords[0][0],
-                'y1': coords[0][1],
-                'x2': coords[1][0],
-                'y2': coords[1][1],
-                'x3': coords[2][0],
-                'y3': coords[2][1],
-                'x4': coords[3][0],
-                'y4': coords[3][1]
+                'strap_id': index + 1,
+                'x1': avg_x1,
+                'y1': avg_y1,
+                'x2': avg_x2,
+                'y2': avg_y2
             }
             strap_results.append(strap_info)
 
         return strap_results
-
 
     def extract_box_info(self, img_path, min_confidence=0.65):
         image = cv2.imread(img_path)
@@ -90,32 +103,49 @@ class StrapDetector:
         box_intersections = {box['box_id']: False for box in box_positions}
 
         for strap in strap_positions:
-            strap_lines = [LineString([(strap['x1'], strap['y1']), (strap['x3'], strap['y3'])]),
-                           LineString([(strap['x2'], strap['y2']), (strap['x4'], strap['y4'])])]
+            # 使用绑带的平均坐标点创建一条线段
+            strap_line = LineString([(strap['x1'], strap['y1']), (strap['x2'], strap['y2'])])
 
             for box in box_positions:
                 box_id = box['box_id']
                 box_polygon = Polygon([(box['xmin'], box['ymin']), (box['xmax'], box['ymin']),
                                        (box['xmax'], box['ymax']), (box['xmin'], box['ymax'])])
 
-                # Check intersection between strap lines and box polygon
-                intersects = False
-                for line in strap_lines:
-                    if line.intersects(box_polygon):
-                        intersects = True
-                        break
-
-                if intersects:
+                if strap_line.intersects(box_polygon):
                     box_intersections[box_id] = True
 
         all_boxes_with_strap = all(box_intersections.values())
-
         return all_boxes_with_strap, box_intersections
 
+    def draw_boxes_and_straps(self, img_path, box_positions, strap_positions):
+        image = cv2.imread(img_path)
+        # 绘制盒子，使用蓝色
+        for box in box_positions:
+            cv2.rectangle(image, (int(box['xmin']), int(box['ymin'])), (int(box['xmax']), int(box['ymax'])),
+                          (255, 0, 0), 2)
+            cv2.putText(image, f"Box {box['box_id']}", (int(box['xmin']), int(box['ymin']) - 10),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.9, (255, 0, 0), 2)
+
+        # 绘制绑带，使用绿色
+        for strap in strap_positions:
+            # 使用从 extract_strap_info 传入的坐标
+            avg_x1 = int(strap['x1'])
+            avg_y1 = int(strap['y1'])
+            avg_x2 = int(strap['x2'])
+            avg_y2 = int(strap['y2'])
+
+            # 连接这两个平均点
+            cv2.line(image, (avg_x1, avg_y1), (avg_x2, avg_y2), (0, 255, 0), 2)
+            cv2.putText(image, f"Strap {strap['strap_id']}", (avg_x1, avg_y1 - 10),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
+
+        output_path = "output_with_boxes_and_straps.jpg"
+        cv2.imwrite(output_path, image)
+        print(f"Image saved to {output_path}")
 
 
 if __name__ == '__main__':
     # Example usage:
     detector = StrapDetector()
-    detector.load_model(['../weights/cargolabel.pt', '../weights//bangdai.pt'])
-    result = detector.detect_strap('../ceshitu/9832.jpeg')
+    detector.load_model(['../weights/cargolabel.pt', '../weights/bangdai.pt'])
+    result = detector.detect_strap('../ceshitu/bangdaiceshi2.jpeg', draw=True)
