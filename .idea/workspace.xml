@@ -4,12 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b1936a3d-1720-422b-9ec3-c51baefd814a" name="Changes" comment="update zhedang">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/detectors/ZheDangDet.py" beforeDir="false" afterPath="$PROJECT_DIR$/detectors/ZheDangDet.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/detectors/detectors.json" beforeDir="false" afterPath="$PROJECT_DIR$/detectors/detectors.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/weights/zhedang.pt" beforeDir="false" afterPath="$PROJECT_DIR$/weights/zhedang.pt" afterDir="false" />
-    </list>
+    <list default="true" id="b1936a3d-1720-422b-9ec3-c51baefd814a" name="Changes" comment="update zhedang for obb model" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -247,7 +242,7 @@
       <workItem from="1720403025378" duration="8612000" />
       <workItem from="1720427098088" duration="2776000" />
       <workItem from="1720431812623" duration="7000" />
-      <workItem from="1720437145391" duration="14233000" />
+      <workItem from="1720437145391" duration="14536000" />
     </task>
     <task id="LOCAL-00001" summary="update bangdai detection">
       <option name="closed" value="true" />
@@ -273,7 +268,15 @@
       <option name="project" value="LOCAL" />
       <updated>1720427148462</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="update zhedang for obb model">
+      <option name="closed" value="true" />
+      <created>1720455651928</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1720455651928</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -323,11 +326,12 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="update bangdai detection" />
     <MESSAGE value="update zhedang" />
-    <option name="LAST_COMMIT_MESSAGE" value="update zhedang" />
+    <MESSAGE value="update zhedang for obb model" />
+    <option name="LAST_COMMIT_MESSAGE" value="update zhedang for obb model" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Container_Packing_Detection_System$ZheDangDetOld.coverage" NAME="ZheDangDetOld Coverage Results" MODIFIED="1720454348854" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/detectors" />
-    <SUITE FILE_PATH="coverage/Container_Packing_Detection_System$ZheDangDet.coverage" NAME="ZheDangDet Coverage Results" MODIFIED="1720454902056" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/detectors" />
+    <SUITE FILE_PATH="coverage/Container_Packing_Detection_System$ZheDangDet.coverage" NAME="ZheDangDet Coverage Results" MODIFIED="1720455412046" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/detectors" />
     <SUITE FILE_PATH="coverage/Container_Packing_Detection_System$detector.coverage" NAME="detector Coverage Results" MODIFIED="1720273046331" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Container_Packing_Detection_System$StrapDetOldOld.coverage" NAME="StrapDetOldOld Coverage Results" MODIFIED="1720324398387" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/detectors" />
     <SUITE FILE_PATH="coverage/Container_Packing_Detection_System$registry.coverage" NAME="registry Coverage Results" MODIFIED="1720256494650" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="E:/Users/Tigre/anaconda3/envs/ocrtest/Lib/site-packages/modelscope/utils" />
