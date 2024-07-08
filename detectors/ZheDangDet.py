@@ -3,6 +3,7 @@ import os
 import re
 import logging
 import numpy as np
+import matplotlib.pyplot as plt
 
 logging.getLogger('ppocr').setLevel(logging.WARNING)
 from detect.AlgorithmManager import AlgorithmManager
@@ -216,3 +217,33 @@ class ZheDangDetector:
                     all_texts.append(line[1][0])
         combined_text = ' '.join(all_texts)
         return combined_text
+
+    def draw_detections(self, image, detections):
+        for detection in detections:
+            xmin, ymin, xmax, ymax = int(detection['xmin']), int(detection['ymin']), int(detection['xmax']), int(
+                detection['ymax'])
+            label = str(detection['state'])
+            cv2.rectangle(image, (xmin, ymin), (xmax, ymax), (0, 255, 0), 2)
+            cv2.putText(image, label, (xmin, ymin - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
+            for label_info in detection['labelingood']:
+                lxmin, lymin, lxmax, lymax = int(label_info['xmin']), int(label_info['ymin']), int(
+                    label_info['xmax']), int(label_info['ymax'])
+                ocr_result = str(label_info['ocr_result'])
+                cv2.rectangle(image, (lxmin, lymin), (lxmax, lymax), (255, 0, 0), 2)
+                cv2.putText(image, ocr_result, (lxmin, lymin - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 0), 2)
+        return image
+
+
+if __name__ == '__main__':
+    detector = ZheDangDetector()
+    detector.load_model(["../weights/zhedang.pt",
+                         "../weights/shouxie.pt",
+                         "../detectors/CargoLabel/cv_convnextTiny_ocr-recognition-handwritten_damo"])
+    result = detector.detect_zhedang_label('../ten/2.jpg')
+
+    image = cv2.imread('../ten/2.jpg')
+    drawn_image = detector.draw_detections(image, result)
+
+    plt.imshow(cv2.cvtColor(drawn_image, cv2.COLOR_BGR2RGB))
+    plt.axis('off')
+    plt.show()

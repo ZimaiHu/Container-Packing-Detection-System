@@ -148,4 +148,4 @@ if __name__ == '__main__':
     # Example usage:
     detector = StrapDetector()
     detector.load_model(['../weights/cargolabel.pt', '../weights/bangdai.pt'])
-    result = detector.detect_strap('../ceshitu/bangdaiceshi2.jpeg', draw=True)
+    result = detector.detect_strap('../ceshitu/bangdaiceshi.jpeg', draw=True)
