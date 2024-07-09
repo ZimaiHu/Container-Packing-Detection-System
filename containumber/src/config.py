@@ -21,3 +21,4 @@ region_model_path = "models/container_number/container_number_region_5_7_3.pt"
 patch_model_path = ["models/container_number/container_number_patch_shu_7_3.pt",
                     "models/container_number/container_number_patch_heng_7_3.pt"]
 ocr_model_path = "models/ocr/ocr_funeting"
+cls_model_path = "models/ocr/yolo_cls_ocr/container_number_cls_ocr.pt"
