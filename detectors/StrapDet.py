@@ -30,10 +30,10 @@ class StrapDetector:
         # 转换 strap_positions 数据格式 为数据库需要的方式
         strap_bboxes = [
             {
-                'xmin': int(min(strap['x1'], strap['x2'])),
-                'ymin': int(min(strap['y1'], strap['y2'])),
-                'xmax': int(max(strap['x1'], strap['x2'])),
-                'ymax': int(max(strap['y1'], strap['y2']))
+                'xmin': int(strap['x1']),
+                'ymin': int(strap['y1']),
+                'xmax': int(strap['x2']),
+                'ymax': int(strap['y2'])
             }
             for strap in strap_positions
         ]
@@ -148,4 +148,4 @@ if __name__ == '__main__':
     # Example usage:
     detector = StrapDetector()
     detector.load_model(['../weights/cargolabel.pt', '../weights/bangdai.pt'])
-    result = detector.detect_strap('../ceshitu/bangdaiceshi.jpeg', draw=True)
+    result = detector.detect_strap('../ceshitu/bangdai1.jpg', draw=True)

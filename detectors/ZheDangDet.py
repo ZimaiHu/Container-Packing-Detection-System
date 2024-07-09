@@ -45,6 +45,7 @@ class ZheDangDetector:
     # 主探测函数
     def detect_zhedang_label(self, img_path, min_confidence=0.65):
         image = cv2.imread(img_path)
+        height, width = image.shape[:2]  # 获取图像的高度和宽度
 
         results = self.model_zhedang.predict(source=image, show=False, device=0, save=False, verbose=False)
         coordinates = results[0].obb.xyxyxyxy.tolist()
@@ -62,19 +63,26 @@ class ZheDangDetector:
 
         overlapping_objects = self.detect_overlap_ocr(box_positions, label_positions, image)
 
-        print("overlapping_objects", overlapping_objects)
-
         results = self.convert_format(overlapping_objects)
 
-        # 对每个有 goods_id 的物品进行状态检测
+        # for item in results:
+        #     if 'goods_id' in item:
+        # # 从整个图像中裁剪出该物品的区域
+        # crop_img = image[int(item['ymin']):int(item['ymax']), int(item['xmin']):int(item['xmax'])]
+        # item['state'] = self.core.start(img=crop_img, target="XiangTi")
+
+        # 对每个物品进行状态检测
         for item in results:
             if 'goods_id' in item:
+                # 确保坐标不为负值，且不超出图像边界
+                ymin = max(0, int(item['ymin']))
+                ymax = min(height, max(0, int(item['ymax'])))
+                xmin = max(0, int(item['xmin']))
+                xmax = min(width, max(0, int(item['xmax'])))
+
                 # 从整个图像中裁剪出该物品的区域
-                crop_img = image[int(item['ymin']):int(item['ymax']), int(item['xmin']):int(item['xmax'])]
+                crop_img = image[ymin:ymax, xmin:xmax]
                 item['state'] = self.core.start(img=crop_img, target="XiangTi")
-
-        print("results", results)
-
         return results
 
     def extract_box_info(self, detected_objects, min_confidence):
@@ -105,6 +113,7 @@ class ZheDangDetector:
 
     def detect_overlap_ocr(self, boxes, labels, img):
         overlapping_objects = []
+        id_counter = 1  # 用于给 goods 和 labels 分配连续的 ID
 
         for box in boxes:
             # 创建箱体多边形
@@ -112,15 +121,17 @@ class ZheDangDetector:
                 [(box['coordinates'][i], box['coordinates'][i + 1]) for i in range(0, len(box['coordinates']), 2)]
             )
             overlapping_info = {
-                'goods_id': box['goods_id'],
+                'goods_id': id_counter,
                 'box_coordinates': box['coordinates'],
                 'labels': []
             }
+            id_counter += 1  # 增加计数器为下一个 ID 做准备
 
             for label in labels:
                 # 创建标签多边形
                 label_polygon = Polygon(
-                    [(label['coordinates'][i], label['coordinates'][i + 1]) for i in range(0, len(label['coordinates']), 2)]
+                    [(label['coordinates'][i], label['coordinates'][i + 1]) for i in
+                     range(0, len(label['coordinates']), 2)]
                 )
                 # 检查重叠
                 if box_polygon.intersects(label_polygon):
@@ -129,17 +140,17 @@ class ZheDangDetector:
                     label_image = img[int(bounds[1]):int(bounds[3]), int(bounds[0]):int(bounds[2])]
                     label_text, label_type = self.process_label(label_image)
                     label_info = {
-                        'label_id': label['label_id'],
+                        'label_id': id_counter,
                         'label_coordinates': label['coordinates'],
                         'ocr_result': label_text if label_text else "",
                         'label_type': label_type
                     }
                     overlapping_info['labels'].append(label_info)
+                    id_counter += 1  # 每添加一个标签，增加计数器
 
             overlapping_objects.append(overlapping_info)
 
-        print("overlapping_objects",overlapping_objects)
-
+        print("overlapping_objects", overlapping_objects)
         return overlapping_objects
 
     def process_label(self, cropped_image):
@@ -170,11 +181,10 @@ class ZheDangDetector:
         # 使用手写识别模型进行预测
         results = self.model_shouxie.predict(source=image, show=False, save=False, verbose=False)[0]
 
-        coord_list = results.boxes.xyxyxyxy.tolist()
+        coord_list = results.boxes.xyxy.tolist()
         if coord_list:  # 确保coord_list不为空
-            x1, y1, x2, y2, x3, y3, x4, y4 = map(int, coord_list[0])
-            # Assuming x1, y1 is the top-left and x3, y3 is the bottom-right for cropping purposes
-            cropped_image = image[y1:y3, x1:x3]
+            x1, y1, x2, y2 = map(int, coord_list[0])
+            cropped_image = image[y1:y2, x1:x2]
             figure_img = cropped_image
             result = self.ocr_recognition(figure_img)
             return result['text'][0] if 'text' in result and result['text'] else ""
@@ -315,9 +325,9 @@ if __name__ == '__main__':
                          "../weights/shouxie.pt",
                          "../weights/guanjianzi.pt",
                          "../detectors/CargoLabel/cv_convnextTiny_ocr-recognition-handwritten_damo"])
-    result = detector.detect_zhedang_label('../zhedang12/11.jpg')
+    result = detector.detect_zhedang_label('../zhedang12/13.jpg')
 
-    image = cv2.imread('../zhedang12/11.jpg')
+    image = cv2.imread('../zhedang12/13.jpg')
     drawn_image = detector.draw_detections(image, result)
     cv2.imwrite('high_quality_output.jpg', drawn_image, [cv2.IMWRITE_PNG_COMPRESSION, 0])
 

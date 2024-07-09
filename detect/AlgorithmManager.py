@@ -37,13 +37,13 @@ class AlgorithmManager:
             coord_list = results.boxes.xyxy.tolist() # 坐标
             return coord_list
         elif target == "XiangTi":
-             results = self.xiangTi_model.predict(source=img, show=False, save=False)[0]
-             xiang_list = results.boxes.cls.tolist()  # 托盘好坏
-             if len(xiang_list) == 0:
-                 return 0
-             elif int(xiang_list[0]) == 1:
-                 return 0
-             else:
-                 return 1
+            results = self.xiangTi_model.predict(source=img, show=False, save=False)[0]
+            xiang_list = results.boxes.cls.tolist()  # 托盘好坏
+            if len(xiang_list) == 0:
+                return 0
+            elif int(xiang_list[0]) == 1:
+                return 0
+            else:
+                return 1
         if each_CN_class_list:
             return each_CN_class_list
