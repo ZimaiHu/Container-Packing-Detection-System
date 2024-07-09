@@ -12,7 +12,8 @@ import numpy as np
 from containumber.src.container_number.container_number_region import ContainerNumberRegion
 from containumber.src.container_number.container_number_ocr import ContainerNumberOCR
 from containumber.src.container_number.container_number_patch import ContainerNumberPatch
-from containumber.src.config import patch_model_path,region_model_path,ocr_model_path
+from containumber.src.container_number.container_number_cls_ocr import ContainerNumberCLSOCR
+from containumber.src.config import patch_model_path,region_model_path,ocr_model_path,cls_model_path
 import os
 
 
@@ -22,12 +23,14 @@ class ContainerNumberDetector:
         self.region_detector = ContainerNumberRegion()  # 横向货柜号/纵向货柜号 区域检测
         self.patch_detector = ContainerNumberPatch()  # 单个货号检测
         self.ocr_detector = ContainerNumberOCR()  # ocr识别
+        self.cls_detector = ContainerNumberCLSOCR()  # 基于yolo-cls ocr识别
 
 
     def load_model(self, base_path):
         self.region_detector.load_model(os.path.join(base_path, region_model_path))
         self.patch_detector.load_model( [os.path.join(base_path, patch_path) for patch_path in patch_model_path])
         self.ocr_detector.load_model(os.path.join(base_path, ocr_model_path))
+        self.cls_detector.load_model(os.path.join(base_path, cls_model_path))
 
     def detect(self, img):
         # step1:检测货柜号区域
@@ -53,10 +56,12 @@ class ContainerNumberDetector:
         # step4:patch级别的ocr识别
         patch_ocr_result_src = self._patch_level_ocr(adjusted_img_list)
         if patch_ocr_result_src:
-            patch_ocr_result_valid = self.ocr_detector.validate_container_id(patch_ocr_result_src)
-            if patch_ocr_result_valid:
-                self.record_ocr(patch_ocr_result_valid)
-                return self.result_dict
+            patch_ocr_result_valid_list = self.cls_detector.convert_level1(patch_ocr_result_src)
+            for index in patch_ocr_result_valid_list:
+                patch_ocr_result_valid = self.ocr_detector.validate_container_id(index)
+                if patch_ocr_result_valid:
+                    self.record_ocr(patch_ocr_result_valid)
+                    return self.result_dict
 
         # step5:替换转换ocr结果
         if region_ocr_result_src and patch_ocr_result_src and len(region_ocr_result_src) > 7 and len(patch_ocr_result_src) > 7:
@@ -80,9 +85,11 @@ class ContainerNumberDetector:
     def _patch_level_ocr(self, patch_img_list):
         text_list = []
         for patch in patch_img_list:
-            text_patch = self.ocr_detector.detect(patch)
-
-            text_list.append(text_patch)
+            # text_patch = self.ocr_detector.detect(patch)
+            # text_list.append(text_patch)
+            text_patch_top3 = self.cls_detector.detect(patch)
+            text_patch_top1 = text_patch_top3[0]
+            text_list.append(text_patch_top1)
         text = ''.join(text_list)
         return text
 
