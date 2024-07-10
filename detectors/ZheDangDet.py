@@ -324,9 +324,9 @@ if __name__ == '__main__':
                          "../weights/shouxie.pt",
                          "../weights/guanjianzi.pt",
                          "../detectors/CargoLabel/cv_convnextTiny_ocr-recognition-handwritten_damo"])
-    result = detector.detect_zhedang_label('../ceshitu/zhedang.jpeg')
+    result = detector.detect_zhedang_label('../zhedang12/3.jpg')
 
-    image = cv2.imread('../ceshitu/zhedang.jpeg')
+    image = cv2.imread('../zhedang12/3.jpg')
     drawn_image = detector.draw_detections(image, result)
     cv2.imwrite('high_quality_output.jpg', drawn_image, [cv2.IMWRITE_PNG_COMPRESSION, 0])
 
