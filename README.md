@@ -4,6 +4,15 @@
 - XXXXX
 - XXXXX
 
+## 服务器运行命令：
+  在Linux系统上后台运行Python（Flask）,并将日志输到指定文件中  nohup python3 -u main.py > log.txt 2>&1 &
+
+  查看该进程是否运行  ps aux|grep python    该命令会列出后台运行python程序和端口号
+
+  如需停止运行  kill -9 进程号
+
+  实时查看日志  tail-f 日志名
+
 ## 文件目录结构
 ```bash
 Container-Packing-Detection-System
