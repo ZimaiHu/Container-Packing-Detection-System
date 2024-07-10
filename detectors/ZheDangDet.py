@@ -150,7 +150,6 @@ class ZheDangDetector:
 
             overlapping_objects.append(overlapping_info)
 
-        print("overlapping_objects", overlapping_objects)
         return overlapping_objects
 
     def process_label(self, cropped_image):
@@ -325,9 +324,9 @@ if __name__ == '__main__':
                          "../weights/shouxie.pt",
                          "../weights/guanjianzi.pt",
                          "../detectors/CargoLabel/cv_convnextTiny_ocr-recognition-handwritten_damo"])
-    result = detector.detect_zhedang_label('../zhedang12/13.jpg')
+    result = detector.detect_zhedang_label('../ceshitu/zhedang.jpeg')
 
-    image = cv2.imread('../zhedang12/13.jpg')
+    image = cv2.imread('../ceshitu/zhedang.jpeg')
     drawn_image = detector.draw_detections(image, result)
     cv2.imwrite('high_quality_output.jpg', drawn_image, [cv2.IMWRITE_PNG_COMPRESSION, 0])
 
