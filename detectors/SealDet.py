@@ -8,6 +8,7 @@ import cv2
 import re
 from collections import Counter
 from ultralytics import YOLO  # 使用 YOLOv8
+import matplotlib.pyplot as plt
 
 # 配置日志记录
 logging.basicConfig(level=logging.INFO)
@@ -16,14 +17,14 @@ logging.getLogger('ppocr').setLevel(logging.WARNING)
 
 
 class SealDetector:
-    def __init__(self, min_confidence=0.5):
+    def __init__(self, min_confidence=0.8):
         self.min_confidence = min_confidence
         logging.getLogger('ppocr').setLevel(logging.WARNING)
 
     def load_model(self, model_path):
         # 加载 YOLOv8 模型
         self.model = YOLO(model_path[0])  # 修改为直接加载 YOLOv8 模型
-        self.ocr = PaddleOCR(use_angle_cls=True, lang='en', use_gpu=True, gpu_mem=4000,det_model_dir='weights/ch_PP-OCRv4_det_infer')
+        self.ocr = PaddleOCR(use_angle_cls=True, lang='en', use_gpu=True, gpu_mem=4000, det_model_dir='weights/ch_PP-OCRv4_det_infer')
 
     # 主探测函数
     def detect_seal(self, img_path):
@@ -72,6 +73,7 @@ class SealDetector:
                 xmin, ymin, xmax, ymax = map(int, box.xyxy[0].cpu().numpy())
                 confidence = box.conf.cpu().numpy()
                 class_id = box.cls.cpu().numpy()
+                print("confidence: ", confidence, "class_id: ", class_id)
 
                 if confidence >= self.min_confidence and class_id == 0:  # 假设手势类别为 0
                     label_0_regions.append((xmin, ymin, xmax, ymax))
@@ -140,3 +142,50 @@ class SealDetector:
             return ""
         counter = Counter(matched_texts)
         return counter.most_common(1)[0][0]
+
+    def draw_detections(self, image, results):
+        """
+        在图像上绘制检测到的封条和识别的文字。
+
+        :param image: 原始图像 (numpy array, OpenCV 格式)
+        :param results: 检测结果字典
+        :return: 绘制了检测结果的图像
+        """
+        drawn_image = image.copy()
+
+        for seal in results['fengtiao']:
+            # 绘制边界框
+            cv2.rectangle(drawn_image,
+                          (seal['xmin'], seal['ymin']),
+                          (seal['xmax'], seal['ymax']),
+                          (0, 255, 0),  # 绿色
+                          2)
+
+            # 绘制文本
+            label = f"{seal['label_id']}: {seal['OCR_result']}"
+            cv2.putText(drawn_image,
+                        label,
+                        (seal['xmin'], seal['ymin'] - 10),
+                        cv2.FONT_HERSHEY_SIMPLEX,
+                        0.5,
+                        (255, 255, 255),  # 白色
+                        1,
+                        cv2.LINE_AA)
+
+        return drawn_image
+
+if __name__ == '__main__':
+
+    logging.getLogger("ppocr").setLevel(logging.ERROR)
+    detector = SealDetector()
+    detector.load_model(["../weights/fengtiao.pt"])
+    result = detector.detect_seal('../ceshitu/0141.jpeg')
+    print("result:", result)
+
+    image = cv2.imread('../ceshitu/0141.jpeg')
+    drawn_image = detector.draw_detections(image, result)
+    cv2.imwrite('high_quality_output.jpg', drawn_image, [cv2.IMWRITE_PNG_COMPRESSION, 0])
+
+    plt.imshow(cv2.cvtColor(drawn_image, cv2.COLOR_BGR2RGB))
+    plt.axis('off')
+    plt.show()

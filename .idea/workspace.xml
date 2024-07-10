@@ -4,9 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b1936a3d-1720-422b-9ec3-c51baefd814a" name="Changes" comment="update strap and zhedang for obb model">
-      <change afterPath="$PROJECT_DIR$/weights/zhedangNew.pt" afterDir="false" />
+    <list default="true" id="b1936a3d-1720-422b-9ec3-c51baefd814a" name="Changes" comment="update zhedang.pt (500轮训练)">
+      <change afterPath="$PROJECT_DIR$/ceshitu/fengtiao.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ceshitu/1-2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ceshitu/2-1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ceshitu/3-2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ceshitu/3323.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ceshitu/4766.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ceshitu/617.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ceshitu/C1-M.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/detectors/SealDet.py" beforeDir="false" afterPath="$PROJECT_DIR$/detectors/SealDet.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/detectors/ZheDangDet.py" beforeDir="false" afterPath="$PROJECT_DIR$/detectors/ZheDangDet.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -42,33 +50,34 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.AlgorithmManager.executor&quot;: &quot;Run&quot;,
-    &quot;Python.StrapDet.executor&quot;: &quot;Run&quot;,
-    &quot;Python.StrapDetNew.executor&quot;: &quot;Run&quot;,
-    &quot;Python.StrapDetOldOld.executor&quot;: &quot;Run&quot;,
-    &quot;Python.ZheDangDet.executor&quot;: &quot;Run&quot;,
-    &quot;Python.ZheDangDetAABB.executor&quot;: &quot;Run&quot;,
-    &quot;Python.ZheDangDetNew.executor&quot;: &quot;Run&quot;,
-    &quot;Python.ZheDangDetOld.executor&quot;: &quot;Run&quot;,
-    &quot;Python.app.executor&quot;: &quot;Run&quot;,
-    &quot;Python.detector.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main.executor&quot;: &quot;Run&quot;,
-    &quot;Python.registry.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/Users/Tigre/Documents/GitHub/Container-Packing-Detection-System/zhedang12&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.AlgorithmManager.executor": "Run",
+    "Python.SealDet.executor": "Run",
+    "Python.StrapDet.executor": "Run",
+    "Python.StrapDetNew.executor": "Run",
+    "Python.StrapDetOldOld.executor": "Run",
+    "Python.ZheDangDet.executor": "Run",
+    "Python.ZheDangDetAABB.executor": "Run",
+    "Python.ZheDangDetNew.executor": "Run",
+    "Python.ZheDangDetOld.executor": "Run",
+    "Python.app.executor": "Run",
+    "Python.detector.executor": "Run",
+    "Python.main.executor": "Run",
+    "Python.registry.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "C:/Users/Tigre/Desktop/abc",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\Users\Tigre\Documents\GitHub\Container-Packing-Detection-System\zhedang12" />
@@ -77,13 +86,13 @@
       <recent name="D:\Users\Tigre\Documents\GitHub\Container-Packing-Detection-System\ceshitu" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Users\Tigre\Documents\GitHub\Container-Packing-Detection-System\ceshitu" />
       <recent name="D:\Users\Tigre\Documents\GitHub\Container-Packing-Detection-System" />
       <recent name="D:\Users\Tigre\Documents\GitHub\Container-Packing-Detection-System\weights" />
-      <recent name="D:\Users\Tigre\Documents\GitHub\Container-Packing-Detection-System\ceshitu" />
       <recent name="D:\Users\Tigre\Documents\GitHub\Container-Packing-Detection-System\detectors" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.ZheDangDet">
+  <component name="RunManager" selected="Python.SealDet">
     <configuration name="AlgorithmManager" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Container-Packing-Detection-System" />
       <option name="ENV_FILES" value="" />
@@ -99,6 +108,29 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/detect/AlgorithmManager.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="SealDet" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Container-Packing-Detection-System" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/detectors" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/detectors/SealDet.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -176,29 +208,6 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="ZheDangDetOld" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="Container-Packing-Detection-System" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/detectors" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/detectors/ZheDangDetOld.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <configuration name="Container-Packing-Detection-System" type="Python.FlaskServer">
       <module name="Container-Packing-Detection-System" />
       <option name="target" value="$PROJECT_DIR$/main.py" />
@@ -207,7 +216,7 @@
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
@@ -217,11 +226,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.SealDet" />
         <item itemvalue="Python.ZheDangDet" />
         <item itemvalue="Python.StrapDet" />
         <item itemvalue="Python.AlgorithmManager" />
         <item itemvalue="Python.ZheDangDetAABB" />
-        <item itemvalue="Python.ZheDangDetOld" />
       </list>
     </recent_temporary>
   </component>
@@ -252,7 +261,10 @@
       <workItem from="1720431812623" duration="7000" />
       <workItem from="1720437145391" duration="15271000" />
       <workItem from="1720487150412" duration="8367000" />
-      <workItem from="1720515005071" duration="591000" />
+      <workItem from="1720515005071" duration="1500000" />
+      <workItem from="1720516876630" duration="874000" />
+      <workItem from="1720539822584" duration="1477000" />
+      <workItem from="1720574028643" duration="1233000" />
     </task>
     <task id="LOCAL-00001" summary="update bangdai detection">
       <option name="closed" value="true" />
@@ -294,7 +306,15 @@
       <option name="project" value="LOCAL" />
       <updated>1720493852538</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="update zhedang.pt (500轮训练)">
+      <option name="closed" value="true" />
+      <created>1720515815714</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1720515815714</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -346,17 +366,19 @@
     <MESSAGE value="update zhedang" />
     <MESSAGE value="update zhedang for obb model" />
     <MESSAGE value="update strap and zhedang for obb model" />
-    <option name="LAST_COMMIT_MESSAGE" value="update strap and zhedang for obb model" />
+    <MESSAGE value="update zhedang.pt (500轮训练)" />
+    <option name="LAST_COMMIT_MESSAGE" value="update zhedang.pt (500轮训练)" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Container_Packing_Detection_System$AlgorithmManager.coverage" NAME="AlgorithmManager Coverage Results" MODIFIED="1720488431185" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/detect" />
     <SUITE FILE_PATH="coverage/Container_Packing_Detection_System$StrapDetOldOld.coverage" NAME="StrapDetOldOld Coverage Results" MODIFIED="1720324398387" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/detectors" />
     <SUITE FILE_PATH="coverage/Container_Packing_Detection_System$registry.coverage" NAME="registry Coverage Results" MODIFIED="1720256494650" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="E:/Users/Tigre/anaconda3/envs/ocrtest/Lib/site-packages/modelscope/utils" />
     <SUITE FILE_PATH="coverage/Container_Packing_Detection_System$ZheDangDetNew.coverage" NAME="ZheDangDetNew Coverage Results" MODIFIED="1720453919691" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/detectors" />
+    <SUITE FILE_PATH="coverage/Container_Packing_Detection_System$SealDet.coverage" NAME="SealDet Coverage Results" MODIFIED="1720575173784" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/detectors" />
     <SUITE FILE_PATH="coverage/Container_Packing_Detection_System$StrapDet.coverage" NAME="StrapDet Coverage Results" MODIFIED="1720488794180" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/detectors" />
     <SUITE FILE_PATH="coverage/Container_Packing_Detection_System$ZheDangDetAABB.coverage" NAME="ZheDangDetAABB Coverage Results" MODIFIED="1720455231164" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/detectors" />
     <SUITE FILE_PATH="coverage/Container_Packing_Detection_System$ZheDangDetOld.coverage" NAME="ZheDangDetOld Coverage Results" MODIFIED="1720454348854" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/detectors" />
-    <SUITE FILE_PATH="coverage/Container_Packing_Detection_System$ZheDangDet.coverage" NAME="ZheDangDet Coverage Results" MODIFIED="1720515577119" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/detectors" />
+    <SUITE FILE_PATH="coverage/Container_Packing_Detection_System$ZheDangDet.coverage" NAME="ZheDangDet Coverage Results" MODIFIED="1720541210685" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/detectors" />
     <SUITE FILE_PATH="coverage/Container_Packing_Detection_System$detector.coverage" NAME="detector Coverage Results" MODIFIED="1720273046331" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Container_Packing_Detection_System$app.coverage" NAME="app Coverage Results" MODIFIED="1720411120569" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Container_Packing_Detection_System$main.coverage" NAME="main Coverage Results" MODIFIED="1720087660831" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
