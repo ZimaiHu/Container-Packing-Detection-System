@@ -29,7 +29,7 @@ class ZheDangDetector:
         model.predict(dummy_image, verbose=False)
         return model
 
-    def detect_zhedang_label(self, img_path, min_confidence=0.7):
+    def detect_zhedang_label(self, img_path, min_confidence=0.5):
         image = cv2.imread(img_path)
         results = self.model_zhedang.predict(source=image, show=False, device=0, save=False, verbose=False)
 
@@ -197,9 +197,9 @@ if __name__ == '__main__':
         "../weights/guanjianzi.pt",
         "../detectors/CargoLabel/cv_convnextTiny_ocr-recognition-handwritten_damo"
     ])
-    result = detector.detect_zhedang_label('../zhedang12/2.jpg')
+    result = detector.detect_zhedang_label('../ceshitu/zhedang3.jpg')
 
-    image = cv2.imread('../zhedang12/2.jpg')
+    image = cv2.imread('../ceshitu/zhedang3.jpg')
     drawn_image = detector.draw_detections(image, result)
     cv2.imwrite('high_quality_output.jpg', drawn_image, [cv2.IMWRITE_PNG_COMPRESSION, 0])
 

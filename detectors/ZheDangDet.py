@@ -40,15 +40,14 @@ class ZheDangDetector:
         self.ocr = PaddleOCR(use_angle_cls=True, lang='en', use_gpu=True, gpu_mem=8000,
                              det_model_dir='weights/ch_PP-OCRv4_det_infer')
 
-    def detect_zhedang_label(self, img_path: str, min_confidence: float = 0.5) -> List[Dict]:
+    def detect_zhedang_label(self, img_path: str, min_confidence: float = 0.65) -> List[Dict]:
         image = cv2.imread(img_path)
         height, width = image.shape[:2]
 
         results = self.models['zhedang'].predict(source=image, show=False, device=0, save=False, verbose=False)
         detected_objects = self._process_yolo_results(results[0])
 
-        box_positions = self._extract_object_info(detected_objects, min_confidence, 0)
-        label_positions = self._extract_object_info(detected_objects, min_confidence, 1)
+        box_positions, label_positions = self._extract_object_info(detected_objects, min_confidence)
 
         overlapping_objects = self.detect_overlap_ocr(box_positions, label_positions, image)
         results = self._convert_format(overlapping_objects)
@@ -75,16 +74,37 @@ class ZheDangDetector:
         ]
         return pd.DataFrame(data, columns=['x1', 'y1', 'x2', 'y2', 'x3', 'y3', 'x4', 'y4', 'confidence', 'class'])
 
-    def _extract_object_info(self, detected_objects: pd.DataFrame, min_confidence: float, class_id: int) -> List[Dict]:
-        return [
-            {
-                f'{"goods" if class_id == 0 else "label"}_id': index,
-                'coordinates': tuple(row[['x1', 'y1', 'x2', 'y2', 'x3', 'y3', 'x4', 'y4']]),
-                'confidence': row['confidence']
-            }
-            for index, row in detected_objects.iterrows()
-            if row['confidence'] > min_confidence and row['class'] == class_id
-        ]
+    # def _extract_object_info(self, detected_objects: pd.DataFrame, min_confidence: float, class_id: int) -> List[Dict]:
+    #     return [
+    #         {
+    #             f'{"goods" if class_id == 0 else "label"}_id': index,
+    #             'coordinates': tuple(row[['x1', 'y1', 'x2', 'y2', 'x3', 'y3', 'x4', 'y4']]),
+    #             'confidence': row['confidence']
+    #         }
+    #         for index, row in detected_objects.iterrows()
+    #         if row['confidence'] > min_confidence and row['class'] == class_id
+    #     ]
+
+    def _extract_object_info(self, detected_objects: pd.DataFrame, min_confidence: float) -> Tuple[
+        List[Dict], List[Dict]]:
+        box_positions = []
+        label_positions = []
+
+        for index, row in detected_objects.iterrows():
+            if row['confidence'] > min_confidence:
+                object_info = {
+                    'coordinates': tuple(row[['x1', 'y1', 'x2', 'y2', 'x3', 'y3', 'x4', 'y4']]),
+                    'confidence': row['confidence']
+                }
+
+                if row['class'] == 0:
+                    object_info['goods_id'] = index
+                    box_positions.append(object_info)
+                elif row['class'] == 1:
+                    object_info['label_id'] = index
+                    label_positions.append(object_info)
+
+        return box_positions, label_positions
 
     def detect_overlap_ocr(self, boxes: List[Dict], labels: List[Dict], img: np.ndarray) -> List[Dict]:
         overlapping_objects = []
@@ -221,9 +241,9 @@ if __name__ == '__main__':
         "../weights/guanjianzi.pt",
         "../detectors/CargoLabel/cv_convnextTiny_ocr-recognition-handwritten_damo"
     ])
-    result = detector.detect_zhedang_label('../zhedang12/2.jpg')
+    result = detector.detect_zhedang_label('../ceshitu/zhedang3.jpg')
 
-    image = cv2.imread('../zhedang12/2.jpg')
+    image = cv2.imread('../ceshitu/zhedang3.jpg')
     drawn_image = detector.draw_detections(image, result)
     cv2.imwrite('high_quality_output.jpg', drawn_image, [cv2.IMWRITE_PNG_COMPRESSION, 0])
 

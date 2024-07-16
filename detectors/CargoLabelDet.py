@@ -1,197 +1,244 @@
-from PIL import ImageFont
-import os
-import re
+import cv2
 import logging
 import numpy as np
-logging.getLogger('ppocr').setLevel(logging.WARNING)
+import pandas as pd
+import matplotlib.pyplot as plt
+from shapely.geometry import Polygon
+from typing import List, Dict, Tuple
 from detect.AlgorithmManager import AlgorithmManager
 from modelscope.pipelines import pipeline
 from modelscope.utils.constant import Tasks
 from paddleocr import PaddleOCR
 from ultralytics import YOLO
-import cv2
-import pandas as pd
-import time
 
+# Set logging level
+logging.getLogger("ppocr").setLevel(logging.ERROR)
 
+# Set environment variable
+import os
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
+
 class CargoLabelDetector:
-    def __init__(self):
-        # 初始化模型
+    def __init__(self, model_paths: List[str]):
         self.core = AlgorithmManager()
-    def load_model(self, model_path):
+        self.load_model(model_paths)
+
+    def load_model(self, model_paths: List[str]):
         _dummy_image = np.zeros((640, 640, 3), dtype=np.uint8)
 
-        self.model_cargo = YOLO(model_path[0])
-        self.model_cargo.predict(_dummy_image, verbose=False)
-        self.model_shouxie = YOLO(model_path[1])
-        
-        self.model_shouxie.predict(_dummy_image, verbose=False)
-        self.model_guanjianzi = YOLO("weights/guanjianzi.pt")
-        self.model_guanjianzi.predict(_dummy_image, verbose=False)
-        self.ocr_recognition = pipeline(Tasks.ocr_recognition, model=model_path[2])
-        start_time = time.time()
-        self.ocr = PaddleOCR(use_angle_cls=True, lang='en', use_gpu=True, gpu_mem=8000,det_model_dir='weights/ch_PP-OCRv4_det_infer')
-        end_time = time.time()
-        elapsed_time = end_time - start_time
-        #print(f"OC took {elapsed_time:.4f} seconds")
-#主探测函数
-    def detect_cargo_label(self, img_path, min_confidence=0.65):
-        start_time = time.time()
-        #self.ocr = PaddleOCR(use_angle_cls=True, lang='en', use_gpu=True, gpu_mem=8000)
-        end_time = time.time()
-        elapsed_time = end_time - start_time
-        #print(f"OCR took {elapsed_time:.4f} seconds")
+        # Load YOLO models
+        self.models = {
+            'cargo': YOLO(model_paths[0]),
+            'shouxie': YOLO(model_paths[1]),
+            'guanjianzi': YOLO(model_paths[2])
+        }
+        for model in self.models.values():
+            model.predict(_dummy_image, verbose=False)
 
+        # Load OCR models
+        self.ocr_recognition = pipeline(Tasks.ocr_recognition, model=model_paths[3])
+        self.ocr = PaddleOCR(use_angle_cls=True, lang='en', use_gpu=True, gpu_mem=8000,
+                             det_model_dir='weights/ch_PP-OCRv4_det_infer')
+
+    def detect_cargo_label(self, img_path: str, min_confidence: float = 0.7) -> List[Dict]:
         image = cv2.imread(img_path)
-        
-        start_time = time.time()
-        results = self.model_cargo.predict(source=image, show=False,device=0,save=False, verbose=False)
-        end_time = time.time()
-        elapsed_time = end_time - start_time
-        #print(f"model_cargopredict took {elapsed_time:.4f} seconds")
-                
-        classes = results[0].boxes.cls.tolist()
-        coordinates = results[0].boxes.xyxy.tolist()
-        confidences = results[0].boxes.conf.tolist()
+        height, width = image.shape[:2]
 
-        data = []
-        for i in range(len(classes)):
-            data.append(coordinates[i] + [confidences[i], int(classes[i])])
+        results = self.models['cargo'].predict(source=image, show=False, device=0, save=False, verbose=False)
+        detected_objects = self._process_yolo_results(results[0])
 
-        df = pd.DataFrame(data, columns=['xmin', 'ymin', 'xmax', 'ymax', 'confidence', 'class'])
-        detected_goods_and_labels = df
-        img = cv2.imread(img_path)
-       
-        start_time = time.time()
-        results = self.process_detections(detected_goods_and_labels, img, min_confidence)
-        end_time = time.time()
-        elapsed_time = end_time - start_time
-        #print(f"process_detections took {elapsed_time:.4f} seconds")
+        box_positions, label_positions = self._extract_object_info(detected_objects, min_confidence)
+        # print("box_positions", box_positions)
+        # print("label_positions", label_positions)
+
+        overlapping_objects = self.detect_overlap_ocr(box_positions, label_positions, image)
+        results = self._convert_format(overlapping_objects)
+
+        # Detect state for each item
         for item in results:
-            labelingood = item['labelingood']
-            if len(labelingood) > 1:
-                valid_labels = [label for label in labelingood if len(label['ocr_result']) > 3]
-                if len(valid_labels) > 1:
-                    labelingood = [max(valid_labels, key=lambda x: len(x['ocr_result']))]
-            item['labelingood'] = labelingood
+            if 'goods_id' in item:
+                ymin, ymax = max(0, int(item['ymin'])), min(height, max(0, int(item['ymax'])))
+                xmin, xmax = max(0, int(item['xmin'])), min(width, max(0, int(item['xmax'])))
+                crop_img = image[ymin:ymax, xmin:xmax]
+                item['state'] = self.core.start(img=crop_img, target="XiangTi")
+
         return results
-#手写识别
-    def crop_and_ocr(self, image):
-        # 使用手写识别模型进行预测
-        start_time = time.time()
-        results = self.model_shouxie.predict(source=image, show=False, save=False, verbose=False)[0]
-        end_time = time.time()
-        elapsed_time = end_time - start_time
-        #print(f"model_shouxie.predict took {elapsed_time:.4f} seconds")
-        
+
+    def _process_yolo_results(self, result) -> pd.DataFrame:
+        return pd.DataFrame(
+            [coord + [conf, int(cls)] for coord, conf, cls in zip(
+                result.boxes.xyxy.tolist(),
+                result.boxes.conf.tolist(),
+                result.boxes.cls.tolist()
+            )],
+            columns=['xmin', 'ymin', 'xmax', 'ymax', 'confidence', 'class']
+        )
+
+    def _extract_object_info(self, detected_objects: pd.DataFrame, min_confidence: float) -> Tuple[
+        List[Dict], List[Dict]]:
+        box_positions = []
+        label_positions = []
+
+        for index, row in detected_objects.iterrows():
+            if row['confidence'] > min_confidence:
+                object_info = {
+                    'coordinates': (row['xmin'], row['ymin'], row['xmax'], row['ymax']),
+                    'confidence': row['confidence']
+                }
+
+                if row['class'] == 0:
+                    object_info['goods_id'] = index
+                    box_positions.append(object_info)
+                elif row['class'] == 1:
+                    object_info['label_id'] = index
+                    label_positions.append(object_info)
+
+        return box_positions, label_positions
+
+    def detect_overlap_ocr(self, boxes: List[Dict], labels: List[Dict], img: np.ndarray) -> List[Dict]:
+        overlapping_objects = []
+        id_counter = 1
+
+        for box in boxes:
+            box_polygon = Polygon(self._coordinates_to_points(box['coordinates']))
+            overlapping_info = {
+                'goods_id': id_counter,
+                'box_coordinates': box['coordinates'],
+                'labels': []
+            }
+            id_counter += 1
+
+            for label in labels:
+                label_polygon = Polygon(self._coordinates_to_points(label['coordinates']))
+                if box_polygon.intersects(label_polygon):
+                    bounds = label_polygon.bounds
+                    label_image = img[int(bounds[1]):int(bounds[3]), int(bounds[0]):int(bounds[2])]
+                    label_text, label_type = self._process_label(label_image)
+                    label_info = {
+                        'label_id': id_counter,
+                        'label_coordinates': label['coordinates'],
+                        'ocr_result': label_text if label_text else "",
+                        'label_type': label_type
+                    }
+                    overlapping_info['labels'].append(label_info)
+                    id_counter += 1
+
+            overlapping_objects.append(overlapping_info)
+
+        return overlapping_objects
+
+    def _coordinates_to_points(self, coordinates: Tuple) -> List[Tuple[float, float]]:
+        return [(coordinates[0], coordinates[1]), (coordinates[2], coordinates[1]),
+                (coordinates[2], coordinates[3]), (coordinates[0], coordinates[3])]
+
+    def _process_label(self, cropped_image: np.ndarray) -> Tuple[str, str]:
+        label_text = self.recognize_text_paddleocr(cropped_image)
+        k = label_text.replace(" ", "")
+        if not label_text or len(k) < 5:
+            label_text = self._crop_and_ocr(cropped_image)
+            label_type = '0'  # 拆托标签
+        else:
+            label_text = self._format_extracted_number(label_text).replace(".", "")
+            label_type = '1'  # 正常标签
+            if not label_text:
+                label_text = self._process_guanjianzi(cropped_image)
+        return label_text, label_type
+
+    def _crop_and_ocr(self, image: np.ndarray) -> str:
+        results = self.models['shouxie'].predict(source=image, show=False, save=False, verbose=False)[0]
         coord_list = results.boxes.xyxy.tolist()
-        if coord_list:  # 确保coord_list不为空
+        if coord_list:
             x1, y1, x2, y2 = map(int, coord_list[0])
             cropped_image = image[y1:y2, x1:x2]
-            figure_img = cropped_image
-            result = self.ocr_recognition(figure_img)
-            return result['text'][0]
-        else:
-            return ""
-#综合步骤
-    def process_detections(self, detected_objects, img, min_confidence):
-        counter = 1
-        overlapping_objects = []
-        for index, row in detected_objects.iterrows():
-            if row['confidence'] > min_confidence and row['class'] == 0:
-                cimage = img[int(row['ymin']):int(row['ymax']), int(row['xmin']):int(row['xmax'])]
-                r = self.core.start(img=cimage, target="XiangTi")
-                overlapping_info = {
-                    'goods_id': counter,
-                    'xmin': row['xmin'],
-                    'ymin': row['ymin'],
-                    'xmax': row['xmax'],
-                    'ymax': row['ymax'],
-                    'state': r,
-                    'labelingood': []
-                }
-                counter += 1
-                normal_labels = []
-                dismantle_labels = []
-                for _, label_row in detected_objects.iterrows():
-                    if label_row['class'] == 1 and label_row['confidence'] >= min_confidence:
-                        if (row['xmin'] < label_row['xmax'] and row['xmax'] > label_row['xmin'] and
-                                row['ymin'] < label_row['ymax'] and row['ymax'] > label_row['ymin']):
-                            cropped_image = img[int(label_row['ymin']):int(label_row['ymax']),
-                                            int(label_row['xmin']):int(label_row['xmax'])]
-                            label_text = self.recognize_text_paddleocr(cropped_image)
-                            k = label_text.replace(" ", "")
-                            if not label_text or len(k) < 5:
-                                label_text = self.crop_and_ocr(cropped_image)
-                                label_type = '0'#拆托标签
-                            else:
-                                label_text = self.recognize_text_paddleocr(cropped_image)
-                                label_text = self.format_extracted_number(label_text)
-                                label_text = label_text.replace(".", "")
-                                label_type = '1'#正常标签
-                                if len(label_text)==0:
-                                    print("进入框选")
-                                    results = self.model_guanjianzi.predict(source=cropped_image, show=False, save=False, verbose=False)[0]
-                                    coord_list = results.boxes.xyxy.tolist()
-                                    if coord_list:  # 确保coord_list不为空
-                                        x1, y1, x2, y2 = map(int, coord_list[0])
-                                        guanjianzi_img = cropped_image[y1:y2, x1:x2]
-                                        # cv2.imwrite(f'guanjianzi_img{counter}.jpg', guanjianzi_img)
-                                        label_text = self.ocr_recognition(guanjianzi_img)['text'][0]
-                                        # label_text=self.recognize_text_paddleocr(guanjianzi_img)
-                                        label_text = label_text.replace(".", "")
-                                    else:
-                                        label_text=""
-                            label_info = {
-                                'label_id': counter,
-                                'xmin': label_row['xmin'],
-                                'ymin': label_row['ymin'],
-                                'xmax': label_row['xmax'],
-                                'ymax': label_row['ymax'],
-                                'ocr_result': label_text if label_text else "",
-                            }
-                            if label_type == '1':
-                                normal_labels.append(label_info)
-                            else:
-                                dismantle_labels.append(label_info)
-                            counter += 1
-                # 过滤标签信息，确保每个货物最多保留一个正常货物标签和一个拆托标签
-                filtered_labels = []
-                if normal_labels:
-                    normal_labels.sort(key=lambda x: len(x['ocr_result']), reverse=True)
-                    filtered_labels.append(normal_labels[0])  # 保留最长的正常货物标签
-                if dismantle_labels:
-                    filtered_labels.append(dismantle_labels[0])  # 保留一个拆托标签
-                overlapping_info['labelingood'] = filtered_labels
-                overlapping_objects.append(overlapping_info)
-        return overlapping_objects
-#正则变换
-    def format_extracted_number(self, text):
+            result = self.ocr_recognition(cropped_image)
+            return result['text'][0] if 'text' in result and result['text'] else ""
+        return ""
+
+    def _format_extracted_number(self, text: str) -> str:
         parts = text.split()
         valid_numbers = []
         dot_part = None
-        if parts:
-            for part in parts:
-                number = ''.join(re.findall(r'\d', part))
-                if len(number) == 8:
-                    valid_numbers.append(part)
-                    if '.' in part:
-                        dot_part = part
+        for part in parts:
+            number = ''.join(filter(str.isdigit, part))
+            if len(number) == 8:
+                valid_numbers.append(part)
+                if '.' in part:
+                    dot_part = part
+        if len(valid_numbers) == 2 and dot_part:
+            return dot_part
+        return ' '.join([''.join(filter(str.isdigit, part)) for part in valid_numbers])
 
-            if len(valid_numbers) == 2 and dot_part:
-                return dot_part
-            return ' '.join([''.join(re.findall(r'\d', part)) for part in valid_numbers])
+    def _process_guanjianzi(self, image: np.ndarray) -> str:
+        results = self.models['guanjianzi'].predict(source=image, show=False, save=False, verbose=False)[0]
+        coord_list = results.boxes.xyxy.tolist()
+        if coord_list:
+            x1, y1, x2, y2 = map(int, coord_list[0])
+            guanjianzi_img = image[y1:y2, x1:x2]
+            return self.ocr_recognition(guanjianzi_img)['text'][0].replace(".", "")
         return ""
-#paddle识别
-    def recognize_text_paddleocr(self, image):
+
+    def recognize_text_paddleocr(self, image: np.ndarray) -> str:
         result = self.ocr.ocr(image, cls=True)
-        if result[0] is None:
+        if not result[0]:
             return ""
-        all_texts = []
-        for res in result:
-            if res is not None:
-                for line in res:
-                    all_texts.append(line[1][0])
-        combined_text = ' '.join(all_texts)
-        return combined_text
+        return ' '.join(line[1][0] for res in result if res for line in res)
+
+    def _convert_format(self, original_data: List[Dict]) -> List[Dict]:
+        return [
+            {
+                'goods_id': item['goods_id'],
+                'xmin': item['box_coordinates'][0],
+                'ymin': item['box_coordinates'][1],
+                'xmax': item['box_coordinates'][2],
+                'ymax': item['box_coordinates'][3],
+                'state': 1,
+                'labelingood': [
+                    {
+                        'label_id': label['label_id'],
+                        'xmin': label['label_coordinates'][0],
+                        'ymin': label['label_coordinates'][1],
+                        'xmax': label['label_coordinates'][2],
+                        'ymax': label['label_coordinates'][3],
+                        'ocr_result': label['ocr_result']
+                    } for label in item['labels']
+                ]
+            } for item in original_data
+        ]
+
+    def draw_detections(self, image: np.ndarray, detections: List[Dict]) -> np.ndarray:
+        for detection in detections:
+            # Draw box
+            xmin, ymin, xmax, ymax = map(int, [detection['xmin'], detection['ymin'], detection['xmax'], detection['ymax']])
+            cv2.rectangle(image, (xmin, ymin), (xmax, ymax), (0, 255, 0), 2)
+
+            # Draw labels
+            for label in detection['labelingood']:
+                label_xmin, label_ymin, label_xmax, label_ymax = map(int, [label['xmin'], label['ymin'], label['xmax'], label['ymax']])
+                cv2.rectangle(image, (label_xmin, label_ymin), (label_xmax, label_ymax), (255, 0, 0), 2)
+                cv2.putText(image, str(label['ocr_result']), (label_xmin, label_ymin - 10),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 0), 2)
+
+            # Draw goods_id
+            cv2.putText(image, f"ID: {detection['goods_id']}", (xmin, ymin - 10),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
+
+        return image
+
+if __name__ == '__main__':
+
+    detector = CargoLabelDetector([
+        "../weights/cargolabel.pt",
+        "../weights/shouxie.pt",
+        "../weights/guanjianzi.pt",
+        "../detectors/CargoLabel/cv_convnextTiny_ocr-recognition-handwritten_damo"
+    ])
+    result = detector.detect_cargo_label('../ceshitu/0-0.jpg')
+    print("result", result)
+
+    image = cv2.imread('../ceshitu/0-0.jpg')
+    drawn_image = detector.draw_detections(image, result)
+    cv2.imwrite('high_quality_output.jpg', drawn_image, [cv2.IMWRITE_PNG_COMPRESSION, 0])
+
+    plt.imshow(cv2.cvtColor(drawn_image, cv2.COLOR_BGR2RGB))
+    plt.axis('off')
+    plt.show()
