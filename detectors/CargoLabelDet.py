@@ -19,9 +19,8 @@ import os
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
 class CargoLabelDetector:
-    def __init__(self, model_paths: List[str]):
+    def __init__(self):
         self.core = AlgorithmManager()
-        self.load_model(model_paths)
 
     def load_model(self, model_paths: List[str]):
         _dummy_image = np.zeros((640, 640, 3), dtype=np.uint8)
@@ -226,12 +225,14 @@ class CargoLabelDetector:
 
 if __name__ == '__main__':
 
-    detector = CargoLabelDetector([
+    detector = CargoLabelDetector()
+    detector.load_model([
         "../weights/cargolabel.pt",
         "../weights/shouxie.pt",
         "../weights/guanjianzi.pt",
         "../detectors/CargoLabel/cv_convnextTiny_ocr-recognition-handwritten_damo"
     ])
+
     result = detector.detect_cargo_label('../ceshitu/0-0.jpg')
     print("result", result)
 

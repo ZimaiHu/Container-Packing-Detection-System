@@ -1,7 +1,6 @@
 import json
 from detectors.CargoLabelDet import CargoLabelDetector
 from detectors.PalletCornerDet import PalletDetector
-# from detectors.StrapDet import StrapDetector
 from detectors.SealDet import SealDetector
 from detectors.ChaituoDet import ChaituoDetector
 from detectors.FodsDet import FodsDetector
@@ -15,8 +14,8 @@ class Detector:
     def __init__(self):
         self.PalletCorner = PalletDetector()
         self.CargoLabel = CargoLabelDetector()
-        self.Zhedang=ZheDangDetector()
-        self.StrapDet= StrapDetector()
+        self.Zhedang = ZheDangDetector()
+        self.StrapDet = StrapDetector()
         self.SealDet = SealDetector()
         self.ChaituoDet = ChaituoDetector()
         self.FodsDet = FodsDetector()
@@ -57,9 +56,9 @@ class Detector:
             return self.detect_chaituo_det(img)
         if task == "7":
             return self.detect_fods_det(img)
-        if task=="8":
+        if task == "8":
             return self.detect_qianhou_det(img)
-        if task=="9":
+        if task == "9":
             return self.detect_zhedang_det(img)
     def detect_cargo_label_det(self, img):
         txt = self.CargoLabel.detect_cargo_label(img)

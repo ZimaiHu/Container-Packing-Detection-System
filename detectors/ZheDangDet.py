@@ -19,9 +19,8 @@ import os
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
 class ZheDangDetector:
-    def __init__(self, model_paths: List[str]):
+    def __init__(self):
         self.core = AlgorithmManager()
-        self.load_model(model_paths)
 
     def load_model(self, model_paths: List[str]):
         _dummy_image = np.zeros((640, 640, 3), dtype=np.uint8)
@@ -235,12 +234,14 @@ class ZheDangDetector:
         return image
 
 if __name__ == '__main__':
-    detector = ZheDangDetector([
+    detector = ZheDangDetector()
+    detector.load_model([
         "../weights/zhedang.pt",
         "../weights/shouxie.pt",
         "../weights/guanjianzi.pt",
         "../detectors/CargoLabel/cv_convnextTiny_ocr-recognition-handwritten_damo"
     ])
+
     result = detector.detect_zhedang_label('../ceshitu/zhedang3.jpg')
 
     image = cv2.imread('../ceshitu/zhedang3.jpg')
