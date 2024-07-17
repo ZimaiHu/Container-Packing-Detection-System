@@ -4,27 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b1936a3d-1720-422b-9ec3-c51baefd814a" name="Changes" comment="update cargolabel and _extract_object_info">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/detector.py" beforeDir="false" afterPath="$PROJECT_DIR$/detector.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/detectors/CargoLabelDet.py" beforeDir="false" afterPath="$PROJECT_DIR$/detectors/CargoLabelDet.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/detectors/ChaituoDet.py" beforeDir="false" afterPath="$PROJECT_DIR$/detectors/ChaituoDet.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/detectors/QianhouDet.py" beforeDir="false" afterPath="$PROJECT_DIR$/detectors/QianhouDet.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/detectors/SealDet.py" beforeDir="false" afterPath="$PROJECT_DIR$/detectors/SealDet.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/detectors/StrapDet.py" beforeDir="false" afterPath="$PROJECT_DIR$/detectors/StrapDet.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/detectors/ZheDangDet.py" beforeDir="false" afterPath="$PROJECT_DIR$/detectors/ZheDangDet.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/detectors/detectors.json" beforeDir="false" afterPath="$PROJECT_DIR$/detectors/detectors.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/detectors/high_quality_output.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/detectors/weights/ch_PP-OCRv4_det_infer/inference.pdiparams" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/detectors/weights/ch_PP-OCRv4_det_infer/inference.pdiparams.info" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/detectors/weights/ch_PP-OCRv4_det_infer/inference.pdmodel" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/detectors/zhedangAABB.py" beforeDir="false" afterPath="$PROJECT_DIR$/detectors/zhedangAABB.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/weights/ch_PP-OCRv4_det_infer/inference.pdiparams" beforeDir="false" afterPath="$PROJECT_DIR$/weights/ch_PP-OCRv4_det_infer/inference.pdiparams" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/weights/ch_PP-OCRv4_det_infer/inference.pdiparams.info" beforeDir="false" afterPath="$PROJECT_DIR$/weights/ch_PP-OCRv4_det_infer/inference.pdiparams.info" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/weights/ch_PP-OCRv4_det_infer/inference.pdmodel" beforeDir="false" afterPath="$PROJECT_DIR$/weights/ch_PP-OCRv4_det_infer/inference.pdmodel" afterDir="false" />
-    </list>
+    <list default="true" id="b1936a3d-1720-422b-9ec3-c51baefd814a" name="Changes" comment="update select the model" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -302,7 +282,7 @@
       <workItem from="1721139509722" duration="81000" />
       <workItem from="1721139608115" duration="7928000" />
       <workItem from="1721187426635" duration="51000" />
-      <workItem from="1721187808313" duration="6659000" />
+      <workItem from="1721187808313" duration="6959000" />
     </task>
     <task id="LOCAL-00001" summary="update bangdai detection">
       <option name="closed" value="true" />
@@ -392,7 +372,15 @@
       <option name="project" value="LOCAL" />
       <updated>1721110863410</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="update select the model">
+      <option name="closed" value="true" />
+      <created>1721196413364</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1721196413364</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -420,7 +408,8 @@
     <MESSAGE value="update 1400zhedang normal AABB" />
     <MESSAGE value="update zhedang AABB" />
     <MESSAGE value="update cargolabel and _extract_object_info" />
-    <option name="LAST_COMMIT_MESSAGE" value="update cargolabel and _extract_object_info" />
+    <MESSAGE value="update select the model" />
+    <option name="LAST_COMMIT_MESSAGE" value="update select the model" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Container_Packing_Detection_System$zhedangAABB.coverage" NAME="zhedangAABB Coverage Results" MODIFIED="1720614239222" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/detectors" />
