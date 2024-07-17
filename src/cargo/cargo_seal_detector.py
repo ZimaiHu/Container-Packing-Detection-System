@@ -1,9 +1,7 @@
-import torch
 import numpy as np
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image
 import math
 import logging
-from paddleocr import PaddleOCR
 import cv2
 import re
 from collections import Counter
@@ -18,13 +16,18 @@ logging.getLogger('ppocr').setLevel(logging.WARNING)
 
 class SealDetector:
     def __init__(self, min_confidence=0.8):
+        self.ocr = None
+        self.model = None
         self.min_confidence = min_confidence
 
     def load_model(self, model_path):
         # 加载 YOLOv8 模型
+        _dummy_image = np.zeros((640, 640, 3), dtype=np.uint8)
         self.model = YOLO(model_path[0])  # 修改为直接加载 YOLOv8 模型
-        self.ocr = PaddleOCR(use_angle_cls=True, lang='en', use_gpu=True,
-                             gpu_mem=4000, det_model_dir=model_path[1])
+        self.model.predict(_dummy_image, verbose=False)
+
+    def load_ocr_model(self, model_obj):
+        self.ocr = model_obj
 
     def detect_seal(self, img_path):
         # 检测对象
@@ -195,8 +198,8 @@ class SealDetector:
 
         return drawn_image
 
-if __name__ == '__main__':
 
+if __name__ == '__main__':
     logging.getLogger("ppocr").setLevel(logging.ERROR)
     detector = SealDetector()
     detector.load_model(["../weights/fengtiao.pt"])

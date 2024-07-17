@@ -6,13 +6,13 @@
 @Project  : YiJia_BE
 @Introduce:
 """
+from modelscope import pipeline, Tasks
+from paddleocr import PaddleOCR
 
 from src.detector_all import *
 from weights.model_path_all import *
 from utils import image_to_numpy
 
-import os
-# base_path = os.path.dirname(os.path.abspath(__file__))
 
 class Detector:
     def __init__(self):
@@ -42,6 +42,7 @@ class Detector:
             "9": self.detect_zhedang_det
         }
 
+        self._load_ocr_models()
         # 初始化检测器模型
         self._load_detector_models()
 
@@ -49,15 +50,30 @@ class Detector:
         for detector, path in self.detectors.values():
             detector.load_model(path)
 
+    def _load_ocr_models(self):
+        # self.duguang_general_fine_tuning_ocr = pipeline(Tasks.ocr_recognition, model=ocr_model_path[0])
+        self.duguang_handwritten_ocr = pipeline(Tasks.ocr_recognition, model=ocr_model_path[1])
+        self.pp_ocr = PaddleOCR(use_angle_cls=True, lang='en', use_gpu=True, use_mkldnn=False,
+                                det_model_dir=ocr_model_path[2])
+
+        self.detectors["cargo_chaituo"][0].load_ocr_model(self.pp_ocr)
+        self.detectors["cargo_label"][0].load_ocr_model([self.pp_ocr, self.duguang_handwritten_ocr])
+        self.detectors["cargo_qianhou"][0].load_ocr_model([self.pp_ocr, self.duguang_handwritten_ocr])
+        self.detectors["cargo_seal"][0].load_ocr_model(self.pp_ocr)
+        self.detectors["cargo_zhedang"][0].load_ocr_model([self.pp_ocr, self.duguang_handwritten_ocr])
+
     def detect_all(self, img, task):
-        if task in self.task_map:
-            return self.task_map[task](img)
-        else:
-            raise ValueError("Invalid task number")
+        try:
+            if task in self.task_map:
+                return self.task_map[task](img)
+        except Exception as e:
+            with open("log/error_log.txt", "a") as log_file:
+                log_file.write(f"An error occurred: {e}\n")
+
     def detect_cargo_label_det(self, img):
         return self.detectors["cargo_label"][0].detect_cargo_label(img)
 
-    def detect_zhedang_det(self,img):
+    def detect_zhedang_det(self, img):
         return self.detectors["cargo_zhedang"][0].detect_zhedang_label(img)
 
     def detect_pallet_corner_det(self, img):

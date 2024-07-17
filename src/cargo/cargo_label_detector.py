@@ -7,9 +7,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from shapely.geometry import Polygon
 from typing import List, Dict, Tuple
-from modelscope.pipelines import pipeline
-from modelscope.utils.constant import Tasks
-from paddleocr import PaddleOCR
 from ultralytics import YOLO
 
 # Set logging level
@@ -18,9 +15,12 @@ logging.getLogger("ppocr").setLevel(logging.ERROR)
 # Set environment variable
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
+
 class CargoLabelDetector:
     def __init__(self):
-        pass
+        self.ocr_recognition = None
+        self.ocr = None
+        self.models = None
 
     def load_model(self, model_paths: List[str]):
         _dummy_image = np.zeros((640, 640, 3), dtype=np.uint8)
@@ -35,17 +35,15 @@ class CargoLabelDetector:
         for model in self.models.values():
             model.predict(_dummy_image, verbose=False)
 
-        # Load OCR models
-        self.ocr = PaddleOCR(use_angle_cls=True, lang='en', use_gpu=True, gpu_mem=8000,
-                             det_model_dir=model_paths[4])
-        self.ocr_recognition = pipeline(Tasks.ocr_recognition, model=model_paths[5])
-
+    def load_ocr_model(self, model_obj):
+        self.ocr = model_obj[0]
+        self.ocr_recognition = model_obj[1]
 
     def detect_cargo_label(self, img_path: str, min_confidence: float = 0.7) -> List[Dict]:
         image = cv2.imread(img_path)
         height, width = image.shape[:2]
 
-        results = self.models['cargo'].predict(source=image, show=False, device=0, save=False, verbose=False)
+        results = self.models['cargo'].predict(source=image, show=False, save=False, verbose=False)
         detected_objects = self._process_yolo_results(results[0])
 
         box_positions, label_positions = self._extract_object_info(detected_objects, min_confidence)
@@ -216,12 +214,14 @@ class CargoLabelDetector:
     def draw_detections(self, image: np.ndarray, detections: List[Dict]) -> np.ndarray:
         for detection in detections:
             # Draw box
-            xmin, ymin, xmax, ymax = map(int, [detection['xmin'], detection['ymin'], detection['xmax'], detection['ymax']])
+            xmin, ymin, xmax, ymax = map(int,
+                                         [detection['xmin'], detection['ymin'], detection['xmax'], detection['ymax']])
             cv2.rectangle(image, (xmin, ymin), (xmax, ymax), (0, 255, 0), 2)
 
             # Draw labels
             for label in detection['labelingood']:
-                label_xmin, label_ymin, label_xmax, label_ymax = map(int, [label['xmin'], label['ymin'], label['xmax'], label['ymax']])
+                label_xmin, label_ymin, label_xmax, label_ymax = map(int, [label['xmin'], label['ymin'], label['xmax'],
+                                                                           label['ymax']])
                 cv2.rectangle(image, (label_xmin, label_ymin), (label_xmax, label_ymax), (255, 0, 0), 2)
                 cv2.putText(image, str(label['ocr_result']), (label_xmin, label_ymin - 10),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 0), 2)
@@ -232,8 +232,8 @@ class CargoLabelDetector:
 
         return image
 
-if __name__ == '__main__':
 
+if __name__ == '__main__':
     detector = CargoLabelDetector()
     detector.load_model([
         "../../weights/cargo/cargolabel.pt",

@@ -6,9 +6,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from shapely.geometry import Polygon
 from typing import List, Dict, Tuple
-from modelscope.pipelines import pipeline
-from modelscope.utils.constant import Tasks
-from paddleocr import PaddleOCR
 from ultralytics import YOLO
 
 # 设置日志级别
@@ -16,11 +13,15 @@ logging.getLogger("ppocr").setLevel(logging.ERROR)
 
 # 设置环境变量
 import os
+
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
+
 
 class ZheDangDetector:
     def __init__(self):
-        pass
+        self.models = None
+        self.ocr_recognition = None
+        self.ocr = None
 
     def load_model(self, model_paths: List[str]):
         _dummy_image = np.zeros((640, 640, 3), dtype=np.uint8)
@@ -36,9 +37,13 @@ class ZheDangDetector:
             model.predict(_dummy_image, verbose=False)
 
         # 加载OCR模型
-        self.ocr = PaddleOCR(use_angle_cls=True, lang='en', use_gpu=True, gpu_mem=8000,
-                             det_model_dir=model_paths[4])
-        self.ocr_recognition = pipeline(Tasks.ocr_recognition, model=model_paths[5])
+        # self.ocr = PaddleOCR(use_angle_cls=True, lang='en', use_gpu=True, gpu_mem=8000,
+        #                      det_model_dir=model_paths[4])
+        # self.ocr_recognition = pipeline(Tasks.ocr_recognition, model=model_paths[5])
+
+    def load_ocr_model(self, model_obj):
+        self.ocr = model_obj[0]
+        self.ocr_recognition = model_obj[1]
 
     def detect_zhedang_label(self, img_path: str, min_confidence: float = 0.65) -> List[Dict]:
         image = cv2.imread(img_path)
@@ -132,7 +137,7 @@ class ZheDangDetector:
         return overlapping_objects
 
     def _coordinates_to_points(self, coordinates: Tuple) -> List[Tuple[float, float]]:
-        return [(coordinates[i], coordinates[i+1]) for i in range(0, len(coordinates), 2)]
+        return [(coordinates[i], coordinates[i + 1]) for i in range(0, len(coordinates), 2)]
 
     def _process_label(self, cropped_image: np.ndarray) -> Tuple[str, str]:
         label_text = self.recognize_text_paddleocr(cropped_image)
@@ -212,12 +217,14 @@ class ZheDangDetector:
     def draw_detections(self, image: np.ndarray, detections: List[Dict]) -> np.ndarray:
         for detection in detections:
             # Draw box
-            xmin, ymin, xmax, ymax = map(int, [detection['xmin'], detection['ymin'], detection['xmax'], detection['ymax']])
+            xmin, ymin, xmax, ymax = map(int,
+                                         [detection['xmin'], detection['ymin'], detection['xmax'], detection['ymax']])
             cv2.rectangle(image, (xmin, ymin), (xmax, ymax), (0, 255, 0), 2)
 
             # Draw labels
             for label in detection['labelingood']:
-                label_xmin, label_ymin, label_xmax, label_ymax = map(int, [label['xmin'], label['ymin'], label['xmax'], label['ymax']])
+                label_xmin, label_ymin, label_xmax, label_ymax = map(int, [label['xmin'], label['ymin'], label['xmax'],
+                                                                           label['ymax']])
                 cv2.rectangle(image, (label_xmin, label_ymin), (label_xmax, label_ymax), (255, 0, 0), 2)
                 cv2.putText(image, str(label['ocr_result']), (label_xmin, label_ymin - 10),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 0), 2)
@@ -227,6 +234,7 @@ class ZheDangDetector:
                         cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
 
         return image
+
 
 if __name__ == '__main__':
     detector = ZheDangDetector()

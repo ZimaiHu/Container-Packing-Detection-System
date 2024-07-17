@@ -18,12 +18,11 @@ import os
 
 class ContainerNumberDetector:
     def __init__(self):
-        self.result_dict ={"coordinates": {"xmin": None, "ymin": None, "xmax": None, "ymax": None, "ocr_text": None}}
+        self.result_dict = {"coordinates": {"xmin": None, "ymin": None, "xmax": None, "ymax": None, "ocr_text": None}}
         self.region_detector = ContainerNumberRegion()  # 横向货柜号/纵向货柜号 区域检测
         self.patch_detector = ContainerNumberPatch()  # 单个货号检测
         self.ocr_detector = ContainerNumberOCR()  # ocr识别
         self.cls_detector = ContainerNumberCLSOCR()  # 基于yolo-cls ocr识别
-
 
     def load_model(self, model_path):
         self.region_detector.load_model(model_path[0])
@@ -35,13 +34,13 @@ class ContainerNumberDetector:
         # step1:检测货柜号区域
         coordinates, number_region = self.region_detector.detect(img)
         if number_region is None:
-            return {"coordinates": None,"ocr_text": None}
+            return {"coordinates": None, "ocr_text": None}
         self.record_coordinates(coordinates)
 
         # step2:调整图像方向（应对竖排）
         adjusted_img, adjusted_img_list = self.patch_detector.detect(number_region)
         if adjusted_img is None:
-            return {"coordinates": None,"ocr_text": None}
+            return {"coordinates": None, "ocr_text": None}
 
         # step3:区域级别的ocr识别
         region_ocr_result_src = self._region_level_ocr(adjusted_img)
@@ -63,8 +62,9 @@ class ContainerNumberDetector:
                     return self.result_dict
 
         # step5:替换转换ocr结果
-        if region_ocr_result_src and patch_ocr_result_src and len(region_ocr_result_src) > 7 and len(patch_ocr_result_src) > 7:
-      # if region_ocr_result_src and patch_ocr_result_src and len(region_ocr_result_src) == 11 and len(patch_ocr_result_src) == 11:
+        if region_ocr_result_src and patch_ocr_result_src and len(region_ocr_result_src) > 7 and len(
+                patch_ocr_result_src) > 7:
+            # if region_ocr_result_src and patch_ocr_result_src and len(region_ocr_result_src) == 11 and len(patch_ocr_result_src) == 11:
             transfer_result_better = self.ocr_detector.compare_and_generate(region_ocr_result_src, patch_ocr_result_src)
             transfer_result_valid = self.ocr_detector.generate_correct_code(transfer_result_better)
             if transfer_result_valid:
@@ -98,7 +98,7 @@ class ContainerNumberDetector:
         self.result_dict["coordinates"]["ymin"] = coordinates[1]
         self.result_dict["coordinates"]["xmax"] = coordinates[2]
         self.result_dict["coordinates"]["ymax"] = coordinates[3]
+
     def record_ocr(self, ocr_result):
         # 记录货柜号
         self.result_dict["coordinates"]["ocr_text"] = ocr_result
-

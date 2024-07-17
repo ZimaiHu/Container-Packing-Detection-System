@@ -1,18 +1,20 @@
-from paddleocr import PaddleOCR
-import os
 import re
 import logging
 import cv2
+
 logging.getLogger('ppocr').setLevel(logging.WARNING)
+
 # 设置环境变量以避免某些库的潜在冲突
 class ChaituoDetector:
     def __init__(self, lang='en'):
         self.lang = lang
         self.ocr = None
 
-    def load_model(self,model_path):
-        self.ocr = PaddleOCR(use_angle_cls=True, lang=self.lang, use_gpu=True, use_mkldnn=False,
-                             det_model_dir=model_path[0])
+    def load_model(self, model_path):
+        pass
+    def load_ocr_model(self, model_obj):
+        self.ocr = model_obj
+
     # 主探测函数
     def detect_chaituo(self, img_path):
         label_text = self.recognize_text_paddleocr(img_path)
@@ -31,7 +33,7 @@ class ChaituoDetector:
         if img is None:
             raise ValueError(f"图像加载失败: {img_path}")
 
-         #修改，对图片进行裁剪
+        # 修改，对图片进行裁剪
         height, width, _ = img.shape
 
         # 计算裁剪区域
@@ -77,4 +79,3 @@ class ChaituoDetector:
                 formatted_number = f"{parts[0][-3:]}.{parts[1]}.{parts[2][:2]}"
                 return formatted_number
         return ""  # 如果没有匹配项，则返回空字符串
-

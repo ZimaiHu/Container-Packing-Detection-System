@@ -7,9 +7,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from shapely.geometry import Polygon
 from typing import List, Dict, Tuple
-from modelscope.pipelines import pipeline
-from modelscope.utils.constant import Tasks
-from paddleocr import PaddleOCR
 from ultralytics import YOLO
 
 # Set logging level
@@ -20,7 +17,8 @@ os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
 class QianhouDetector:
     def __init__(self):
-        pass
+        self.ocr_recognition = None
+        self.ocr = None
 
     def load_model(self, model_paths: List[str]):
         _dummy_image = np.zeros((640, 640, 3), dtype=np.uint8)
@@ -36,10 +34,12 @@ class QianhouDetector:
             model.predict(_dummy_image, verbose=False)
 
         # Load OCR models
-        self.ocr = PaddleOCR(use_angle_cls=True, lang='en', use_gpu=True, gpu_mem=8000,
-                             det_model_dir=model_paths[4])
-        self.ocr_recognition = pipeline(Tasks.ocr_recognition, model=model_paths[5])
-
+        # self.ocr = PaddleOCR(use_angle_cls=True, lang='en', use_gpu=True, gpu_mem=8000,
+        #                      det_model_dir=model_paths[4])
+        # self.ocr_recognition = pipeline(Tasks.ocr_recognition, model=model_paths[5])
+    def load_ocr_model(self, model_obj):
+        self.ocr = model_obj[0]
+        self.ocr_recognition = model_obj[1]
     def detect_qianhou(self, img_path: str, min_confidence: float = 0.7) -> List[Dict]:
         image = cv2.imread(img_path)
         height, width = image.shape[:2]

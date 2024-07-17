@@ -22,8 +22,8 @@ cargo_label_path = [
     "weights/cargo/shouxie.pt",
     "weights/cargo/guanjianzi.pt",
     "weights/cargo/huowuposun.pt",
-    "weights/ocr/ch_PP-OCRv4_det_infer",
-    "weights/ocr/cv_convnextTiny_ocr-recognition-handwritten_damo"
+    # "weights/ocr/ch_PP-OCRv4_det_infer",
+    # "weights/ocr/cv_convnextTiny_ocr-recognition-handwritten_damo"
 ]
 
 cargo_pallet_corner_path = [
@@ -38,11 +38,11 @@ cargo_strap_path = [
 
 cargo_seal_path = [
     "weights/cargo/fengtiao.pt",
-    "weights/ocr/ch_PP-OCRv4_det_infer"
+    # "weights/ocr/ch_PP-OCRv4_det_infer"
 ]
 
 cargo_chaituo_path = [
-    "weights/ocr/ch_PP-OCRv4_det_infer"
+    # "weights/ocr/ch_PP-OCRv4_det_infer"
 ]
 
 cargo_qianhou_path = [
@@ -50,8 +50,8 @@ cargo_qianhou_path = [
     "weights/cargo/shouxie.pt",
     "weights/cargo/guanjianzi.pt",
     "weights/cargo/huowuposun.pt",
-    "weights/ocr/ch_PP-OCRv4_det_infer",
-    "weights/ocr/cv_convnextTiny_ocr-recognition-handwritten_damo"
+    # "weights/ocr/ch_PP-OCRv4_det_infer",
+    # "weights/ocr/cv_convnextTiny_ocr-recognition-handwritten_damo"
 ]
 
 cargo_zhedang_path = [
@@ -59,16 +59,20 @@ cargo_zhedang_path = [
     "weights/cargo/shouxie.pt",
     "weights/cargo/guanjianzi.pt",
     "weights/cargo/huowuposun.pt",
-    "weights/ocr/ch_PP-OCRv4_det_infer",
-    "weights/ocr/cv_convnextTiny_ocr-recognition-handwritten_damo"
+    # "weights/ocr/ch_PP-OCRv4_det_infer",
+    # "weights/ocr/cv_convnextTiny_ocr-recognition-handwritten_damo"
 ]
 
 cargo_fods_path = [
     "weights/cargo/fod.pt"
 ]
 
+ocr_model_path = ["weights/ocr/cv_crnn_ocr-recognition-general_damo_finetuning",
+                  "weights/ocr/cv_convnextTiny_ocr-recognition-handwritten_damo",
+                  "weights/ocr/ch_PP-OCRv4_det_infer"
+                  ]
 __all__ = [
     "container_number_path", "cargo_label_path", "cargo_pallet_corner_path",
     "cargo_strap_path", "cargo_seal_path", "cargo_chaituo_path", "cargo_qianhou_path",
-    "cargo_zhedang_path", "cargo_fods_path"
+    "cargo_zhedang_path", "cargo_fods_path", "ocr_model_path"
 ]

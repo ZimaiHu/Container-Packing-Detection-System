@@ -1,3 +1,4 @@
+import numpy as np
 from ultralytics import YOLO
 
 
@@ -6,7 +7,9 @@ class FodsDetector:
         self.model = None
 
     def load_model(self, model_path):
+        _dummy_image = np.zeros((640, 640, 3), dtype=np.uint8)
         self.model = YOLO(model_path[0])
+        self.model.predict(_dummy_image, verbose=False)
 
     def detect_fods(self, image_path):
         results = self.model.predict(source=image_path, show=False, save=False)
