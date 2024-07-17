@@ -40,7 +40,7 @@ class QianhouDetector:
     def load_ocr_model(self, model_obj):
         self.ocr = model_obj[0]
         self.ocr_recognition = model_obj[1]
-    def detect_qianhou(self, img_path: str, min_confidence: float = 0.7) -> List[Dict]:
+    def detect_qianhou(self, img_path: str, min_confidence: float = 0.65) -> List[Dict]:
         image = cv2.imread(img_path)
         height, width = image.shape[:2]
 
@@ -229,16 +229,24 @@ class QianhouDetector:
         return image
 
 if __name__ == '__main__':
+    from paddleocr import PaddleOCR
+    from modelscope import pipeline, Tasks
 
     detector = QianhouDetector()
     detector.load_model([
-        "../../weights/cargo/qianhou.pt",
+        "../../weights/cargo/cargolabel.pt",
         "../../weights/cargo/shouxie.pt",
         "../../weights/cargo/guanjianzi.pt",
-        "../../weights/cargo/huowuposun.pt",
-        "../../weights/ocr/ch_PP-OCRv4_det_infer",
-        "../../weights/ocr/cv_convnextTiny_ocr-recognition-handwritten_damo"
+        "../../weights/cargo/huowuposun.pt"
     ])
+
+    handwritten_recognition_model = pipeline(Tasks.ocr_recognition,
+                                             model="../../weights/ocr/cv_convnextTiny_ocr-recognition-handwritten_damo")
+    paddle_ocr = PaddleOCR(use_angle_cls=True, lang='en', use_gpu=True, use_mkldnn=False,
+                                det_model_dir="../../weights/ocr/ch_PP-OCRv4_det_infer")
+
+    # 将 PaddleOCR 对象和手写识别模型传递给 load_ocr_model
+    detector.load_ocr_model([paddle_ocr, handwritten_recognition_model])
 
     result = detector.detect_qianhou('../../ceshitu/ceshi/qianhouzhedang.jpg')
     print("result", result)

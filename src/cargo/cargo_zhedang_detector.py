@@ -237,17 +237,29 @@ class ZheDangDetector:
 
 
 if __name__ == '__main__':
+    from paddleocr import PaddleOCR
+    from modelscope import pipeline, Tasks
+
     detector = ZheDangDetector()
     detector.load_model([
-        "../weights/zhedang.pt",
-        "../weights/shouxie.pt",
-        "../weights/guanjianzi.pt",
-        "../detectors/CargoLabel/cv_convnextTiny_ocr-recognition-handwritten_damo"
+        "../../weights/cargo/zhedang.pt",
+        "../../weights/cargo/shouxie.pt",
+        "../../weights/cargo/guanjianzi.pt",
+        "../../weights/cargo/huowuposun.pt"
     ])
 
-    result = detector.detect_zhedang_label('../ceshitu/zhedang3.jpg')
+    handwritten_recognition_model = pipeline(Tasks.ocr_recognition,
+                                             model="../../weights/ocr/cv_convnextTiny_ocr-recognition-handwritten_damo")
+    paddle_ocr = PaddleOCR(use_angle_cls=True, lang='en', use_gpu=True, use_mkldnn=False,
+                                det_model_dir="../../weights/ocr/ch_PP-OCRv4_det_infer")
 
-    image = cv2.imread('../ceshitu/zhedang3.jpg')
+    # 将 PaddleOCR 对象和手写识别模型传递给 load_ocr_model
+    detector.load_ocr_model([paddle_ocr, handwritten_recognition_model])
+
+    result = detector.detect_zhedang_label('../../ceshitu/ceshi/zhedang.jpeg')
+    print("result", result)
+
+    image = cv2.imread('../../ceshitu/ceshi/zhedang.jpeg')
     drawn_image = detector.draw_detections(image, result)
     cv2.imwrite('high_quality_output.jpg', drawn_image, [cv2.IMWRITE_PNG_COMPRESSION, 0])
 

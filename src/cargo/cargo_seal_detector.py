@@ -202,11 +202,11 @@ class SealDetector:
 if __name__ == '__main__':
     logging.getLogger("ppocr").setLevel(logging.ERROR)
     detector = SealDetector()
-    detector.load_model(["../weights/fengtiao.pt"])
-    result = detector.detect_seal('../ceshitu/fengtiao2.jpg')
+    detector.load_model(["../../weights/fengtiao.pt"])
+    result = detector.detect_seal('../../ceshitu/fengtiao2.jpg')
     print("result:", result)
 
-    image = cv2.imread('../ceshitu/fengtiao2.jpg')
+    image = cv2.imread('../../ceshitu/fengtiao2.jpg')
     drawn_image = detector.draw_detections(image, result)
     cv2.imwrite('high_quality_output.jpg', drawn_image, [cv2.IMWRITE_PNG_COMPRESSION, 0])
 

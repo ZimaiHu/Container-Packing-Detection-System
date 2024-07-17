@@ -135,7 +135,7 @@ class StrapDetector:
 
 if __name__ == '__main__':
     detector = StrapDetector()
-    detector.load_model(['../weights/cargolabel.pt',
-                         '../weights/bangdai.pt'
+    detector.load_model(['../../weights/cargo/cargolabel.pt',
+                         '../../weights/cargo/bangdai.pt'
                          ])
-    result = detector.detect_strap('../ceshitu/bangdai1.jpg', draw=True)
+    result = detector.detect_strap('../../ceshitu/bangdai1.jpg', draw=True)

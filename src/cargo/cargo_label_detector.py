@@ -47,8 +47,8 @@ class CargoLabelDetector:
         detected_objects = self._process_yolo_results(results[0])
 
         box_positions, label_positions = self._extract_object_info(detected_objects, min_confidence)
-        # print("box_positions", box_positions)
-        # print("label_positions", label_positions)
+        print("box_positions", box_positions)
+        print("label_positions", label_positions)
 
         overlapping_objects = self.detect_overlap_ocr(box_positions, label_positions, image)
         results = self._convert_format(overlapping_objects)
@@ -234,15 +234,24 @@ class CargoLabelDetector:
 
 
 if __name__ == '__main__':
+    from paddleocr import PaddleOCR
+    from modelscope import pipeline, Tasks
+
     detector = CargoLabelDetector()
     detector.load_model([
         "../../weights/cargo/cargolabel.pt",
         "../../weights/cargo/shouxie.pt",
         "../../weights/cargo/guanjianzi.pt",
-        "../../weights/cargo/huowuposun.pt",
-        "../../weights/ocr/ch_PP-OCRv4_det_infer",
-        "../../weights/ocr/cv_convnextTiny_ocr-recognition-handwritten_damo"
+        "../../weights/cargo/huowuposun.pt"
     ])
+
+    handwritten_recognition_model = pipeline(Tasks.ocr_recognition,
+                                             model="../../weights/ocr/cv_convnextTiny_ocr-recognition-handwritten_damo")
+    paddle_ocr = PaddleOCR(use_angle_cls=True, lang='en', use_gpu=True, use_mkldnn=False,
+                                det_model_dir="../../weights/ocr/ch_PP-OCRv4_det_infer")
+
+    # 将 PaddleOCR 对象和手写识别模型传递给 load_ocr_model
+    detector.load_ocr_model([paddle_ocr, handwritten_recognition_model])
 
     result = detector.detect_cargo_label('../../ceshitu/ceshi/zhengpai.jpg')
     print("result", result)
