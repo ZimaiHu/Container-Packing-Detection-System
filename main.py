@@ -1,26 +1,11 @@
-from flask import Flask, request, jsonify
-import numpy as np
 import time
 from detector import Detector
 from functools import wraps
+from flask import Flask, request, jsonify
+from utils import convert_numpy
 
 app = Flask(__name__)
 detector = Detector()  # 创建 Detector 的实例
-
-
-def convert_numpy(obj):
-    if isinstance(obj, (np.integer, np.int32, np.int64, np.intc)):
-        return int(obj)
-    elif isinstance(obj, (np.float32, np.float64)):
-        return float(obj)
-    elif isinstance(obj, np.ndarray):
-        return obj.tolist()
-    elif isinstance(obj, dict):
-        return {k: convert_numpy(v) for k, v in obj.items()}
-    elif isinstance(obj, list):
-        return [convert_numpy(i) for i in obj]
-    return obj
-
 
 def validate_input(f):
     @wraps(f)

@@ -20,15 +20,15 @@ if __name__ == "__main__":
     detector = Detector()
 
     test_cases = [
-        ("ceshitu/ceshi/zhengpai.jpg", "1", False),
-        ("ceshitu/ceshi/zhengpai.jpg", "2", False),
-        ("ceshitu/ceshi/bangdai.jpeg", "3", False),
-        ("ceshitu/ceshi/fengtiao.jpg", "4", False),
-        ("ceshitu/ceshi/huoguihao.jpg", "5", False),
-        ("ceshitu/ceshi/chaituo.jpg", "6", False),
-        ("ceshitu/ceshi/yiwujiance.jpeg", "7", False),
-        ("ceshitu/ceshi/qianhouzhedang.jpg", "8", False),
-        ("ceshitu/ceshi/zhedang.jpeg", "9", False)
+        ("ceshitu/ceshi/zhengpai.jpg", "1", True),
+        ("ceshitu/ceshi/zhengpai.jpg", "2", True),
+        ("ceshitu/ceshi/bangdai.jpeg", "3", True),
+        ("ceshitu/ceshi/fengtiao.jpg", "4", True),
+        ("ceshitu/ceshi/huoguihao.jpg", "5", True),
+        ("ceshitu/ceshi/chaituo.jpg", "6", True),
+        ("ceshitu/ceshi/yiwujiance.jpeg", "7", True),
+        ("ceshitu/ceshi/qianhouzhedang.jpg", "8", True),
+        ("ceshitu/ceshi/zhedang.jpeg", "9", True)
     ]
 
     # (1：整排，2：托盘角，3：绑带，4：封条，5：货柜号，6：拆托，7：异物检测，8前后遮挡货物,9柜内遮挡)
