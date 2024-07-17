@@ -1,4 +1,5 @@
 import os
+import re
 import cv2
 import logging
 import numpy as np
@@ -142,6 +143,7 @@ class CargoLabelDetector:
             label_type = '1'  # 正常标签
             if not label_text:
                 label_text = self._process_guanjianzi(cropped_image)
+        label_text = ''.join(re.findall(r'\d+', label_text))
         return label_text, label_type
 
     def _crop_and_ocr(self, image: np.ndarray) -> str:

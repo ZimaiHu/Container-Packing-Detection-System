@@ -20,17 +20,17 @@ if __name__ == "__main__":
     detector = Detector()
 
     test_cases = [
-        ("ceshitu/0-0.jpg", "1", False),
-        ("ceshitu/202406262.jpg", "2", False),
-        ("ceshitu/9832.jpeg", "3", False),
-        ("ceshitu/0333.jpeg", "4", True),
-        ("ceshitu/zhedang.jpeg", "5", True),
-        ("ceshitu/521.jpg", "6", True),
-        ("ceshitu/333.jpeg", "7", True),
-        ("ceshitu/d04c.jpg", "8", True),
-        ("ceshitu/zhedang1.jpg", "9", True)
+        ("ceshitu/ceshi/zhengpai.jpg", "1", False),
+        ("ceshitu/ceshi/zhengpai.jpg", "2", False),
+        ("ceshitu/ceshi/bangdai.jpeg", "3", False),
+        ("ceshitu/ceshi/fengtiao.jpg", "4", False),
+        ("ceshitu/ceshi/huoguihao.jpg", "5", False),
+        ("ceshitu/ceshi/chaituo.jpg", "6", False),
+        ("ceshitu/ceshi/yiwujiance.jpeg", "7", False),
+        ("ceshitu/ceshi/qianhouzhedang.jpg", "8", False),
+        ("ceshitu/ceshi/zhedang.jpeg", "9", False)
     ]
 
-    # (1：货物标签，2：托盘角，3：绑带，4：封条，5：货柜，6：拆托，7：异物检测，8前后遮挡货物,9柜内遮挡)
+    # (1：整排，2：托盘角，3：绑带，4：封条，5：货柜号，6：拆托，7：异物检测，8前后遮挡货物,9柜内遮挡)
     for img_path, task, measure_time in test_cases:
         run_detection(detector, img_path, task, measure_time)
