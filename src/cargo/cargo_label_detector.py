@@ -47,8 +47,8 @@ class CargoLabelDetector:
         detected_objects = self._process_yolo_results(results[0])
 
         box_positions, label_positions = self._extract_object_info(detected_objects, min_confidence)
-        print("box_positions", box_positions)
-        print("label_positions", label_positions)
+        # print("box_positions", box_positions)
+        # print("label_positions", label_positions)
 
         overlapping_objects = self.detect_overlap_ocr(box_positions, label_positions, image)
         results = self._convert_format(overlapping_objects)
