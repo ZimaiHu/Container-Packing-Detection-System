@@ -24,7 +24,8 @@ class SealDetector:
     def load_model(self, model_path):
         # 加载 YOLOv8 模型
         self.model = YOLO(model_path[0])  # 修改为直接加载 YOLOv8 模型
-        self.ocr = PaddleOCR(use_angle_cls=True, lang='en', use_gpu=True, gpu_mem=4000, det_model_dir='weights/ch_PP-OCRv4_det_infer')
+        self.ocr = PaddleOCR(use_angle_cls=True, lang='en', use_gpu=True,
+                             gpu_mem=4000, det_model_dir=model_path[1])
 
     # 主探测函数
     # def detect_seal(self, img_path):
@@ -125,7 +126,6 @@ class SealDetector:
                 xmin, ymin, xmax, ymax = map(int, box.xyxy[0].cpu().numpy())
                 confidence = box.conf.cpu().numpy()
                 class_id = box.cls.cpu().numpy()
-                print("confidence: ", confidence, "class_id: ", class_id)
 
                 if confidence >= self.min_confidence and class_id == 0:  # 假设手势类别为 0
                     label_0_regions.append((xmin, ymin, xmax, ymax))

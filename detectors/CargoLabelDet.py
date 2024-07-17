@@ -1,3 +1,4 @@
+import os
 import cv2
 import logging
 import numpy as np
@@ -15,7 +16,6 @@ from ultralytics import YOLO
 logging.getLogger("ppocr").setLevel(logging.ERROR)
 
 # Set environment variable
-import os
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
 class CargoLabelDetector:
@@ -35,9 +35,10 @@ class CargoLabelDetector:
             model.predict(_dummy_image, verbose=False)
 
         # Load OCR models
-        self.ocr_recognition = pipeline(Tasks.ocr_recognition, model=model_paths[3])
         self.ocr = PaddleOCR(use_angle_cls=True, lang='en', use_gpu=True, gpu_mem=8000,
-                             det_model_dir='weights/ch_PP-OCRv4_det_infer')
+                             det_model_dir=model_paths[3])
+        self.ocr_recognition = pipeline(Tasks.ocr_recognition, model=model_paths[4])
+
 
     def detect_cargo_label(self, img_path: str, min_confidence: float = 0.7) -> List[Dict]:
         image = cv2.imread(img_path)
@@ -230,6 +231,7 @@ if __name__ == '__main__':
         "../weights/cargolabel.pt",
         "../weights/shouxie.pt",
         "../weights/guanjianzi.pt",
+        "../weights/ch_PP-OCRv4_det_infer",
         "../detectors/CargoLabel/cv_convnextTiny_ocr-recognition-handwritten_damo"
     ])
 

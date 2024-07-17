@@ -22,12 +22,13 @@ class QianhouDetector:
         self.model_cargo.predict(_dummy_image, verbose=False)
         self.model_shouxie = YOLO(model_path[1])
         self.model_shouxie.predict(_dummy_image, verbose=False)
-        self.model_guanjianzi = YOLO("weights/guanjianzi.pt")
+        self.model_guanjianzi = YOLO(model_path[2])
         self.model_guanjianzi.predict(_dummy_image, verbose=False)
-        self.ocr_recognition = pipeline(Tasks.ocr_recognition, model=model_path[2])
+        self.ocr = PaddleOCR(use_angle_cls=True, lang='en', use_gpu=True, gpu_mem=8000,
+                             det_model_dir=model_path[3])
+        self.ocr_recognition = pipeline(Tasks.ocr_recognition, model=model_path[4])
 #主探测函数
     def detect_qianhou(self, img_path, min_confidence=0.65):
-        self.ocr = PaddleOCR(use_angle_cls=True, lang='en', use_gpu=True, gpu_mem=8000,det_model_dir='weights/ch_PP-OCRv4_det_infer')
         image = cv2.imread(img_path)
         results = self.model_cargo.predict(source=image, show=False, save=False, verbose=False)
         classes = results[0].boxes.cls.tolist()

@@ -6,12 +6,12 @@ import cv2
 logging.getLogger('ppocr').setLevel(logging.WARNING)
 # 设置环境变量以避免某些库的潜在冲突
 class ChaituoDetector:
-    def __init__(self, lang='en'):
-        self.lang = lang
-        self.ocr = None
-    def load_model(self):
+    def __init__(self):
         pass
-        # self.ocr = PaddleOCR(use_angle_cls=True, lang=self.lang, use_gpu=True, use_mkldnn=False)
+
+    def load_model(self, model_paths):
+        self.ocr = PaddleOCR(use_angle_cls=True, lang='en', use_gpu=True, use_mkldnn=False,
+                             det_model_dir=model_paths[0])
     # 主探测函数
     def detect_chaituo(self, img_path):
         label_text = self.recognize_text_paddleocr(img_path)
@@ -20,7 +20,7 @@ class ChaituoDetector:
         return formatted_number
     # OCR识别
     def recognize_text_paddleocr(self, img_path):
-        self.ocr = PaddleOCR(use_angle_cls=True, lang=self.lang, use_gpu=True, use_mkldnn=False,det_model_dir='weights/ch_PP-OCRv4_det_infer')
+
         """ 使用PaddleOCR从图像中识别文本，专注于垂直对齐的文本 """
 
         # 对图像进行OCR识别
@@ -44,7 +44,6 @@ class ChaituoDetector:
             self.load_model()
 
         result = self.ocr.ocr(img, cls=True)
-        print(result)
         for t in result:
             if t is None:
                 return ""
@@ -54,7 +53,6 @@ class ChaituoDetector:
 
                 # 遍历每个结果并提取文本
                 for res in result:
-                    print(res)
                     for line in res:
                         # 追加每行文本（line[1][0]包含文本）
                         all_texts.append(line[1][0])

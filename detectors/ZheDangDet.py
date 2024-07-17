@@ -35,9 +35,9 @@ class ZheDangDetector:
             model.predict(_dummy_image, verbose=False)
 
         # 加载OCR模型
-        self.ocr_recognition = pipeline(Tasks.ocr_recognition, model=model_paths[3])
         self.ocr = PaddleOCR(use_angle_cls=True, lang='en', use_gpu=True, gpu_mem=8000,
-                             det_model_dir='weights/ch_PP-OCRv4_det_infer')
+                             det_model_dir=model_paths[3])
+        self.ocr_recognition = pipeline(Tasks.ocr_recognition, model=model_paths[4])
 
     def detect_zhedang_label(self, img_path: str, min_confidence: float = 0.65) -> List[Dict]:
         image = cv2.imread(img_path)
@@ -58,9 +58,6 @@ class ZheDangDetector:
                 xmin, xmax = max(0, int(item['xmin'])), min(width, max(0, int(item['xmax'])))
                 crop_img = image[ymin:ymax, xmin:xmax]
                 item['state'] = self.core.start(img=crop_img, target="XiangTi")
-
-        print("results", results)
-
         return results
 
     def _process_yolo_results(self, result) -> pd.DataFrame:

@@ -4,6 +4,7 @@
       "weights/cargolabel.pt",
       "weights/shouxie.pt",
       "weights/guanjianzi.pt",
+      "weights/ch_PP-OCRv4_det_infer",
       "detectors/CargoLabel/cv_convnextTiny_ocr-recognition-handwritten_damo"
     ],
     "comment": "hw"
@@ -14,6 +15,7 @@
       "weights/zhedang.pt",
       "weights/shouxie.pt",
       "weights/guanjianzi.pt",
+      "weights/ch_PP-OCRv4_det_infer",
       "detectors/CargoLabel/cv_convnextTiny_ocr-recognition-handwritten_damo"
     ],
     "comment": "zd"
@@ -26,11 +28,12 @@
   },
     "Seal": {
     "model_path": [
-      "weights/fengtiao.pt"
+      "weights/fengtiao.pt",
+      "weights/ch_PP-OCRv4_det_infer"
     ],
     "comment": "ft"
   },
-    "Fod": {
+    "Fods": {
     "model_path": [
       "weights/fod.pt"
     ],
@@ -40,6 +43,8 @@
     "model_path": [
       "weights/qianhou.pt",
       "weights/shouxie.pt",
+      "weights/guanjianzi.pt",
+      "weights/ch_PP-OCRv4_det_infer",
       "detectors/CargoLabel/cv_convnextTiny_ocr-recognition-handwritten_damo"
     ],
     "comment": "hw"
@@ -50,5 +55,11 @@
       "weights/bangdai.pt"
     ],
     "comment": "bd"
+  },
+    "Chaituo": {
+    "model_path": [
+      "weights/ch_PP-OCRv4_det_infer"
+    ],
+    "comment": "ct"
   }
 }

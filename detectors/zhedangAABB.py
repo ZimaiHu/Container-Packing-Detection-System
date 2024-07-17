@@ -19,9 +19,9 @@ class ZheDangDetector:
         self.model_zhedang = self._load_yolo_model(model_paths[0])
         self.model_shouxie = self._load_yolo_model(model_paths[1])
         self.model_guanjianzi = self._load_yolo_model(model_paths[2])
-        self.ocr_recognition = pipeline(Tasks.ocr_recognition, model=model_paths[3])
         self.ocr = PaddleOCR(use_angle_cls=True, lang='en', use_gpu=True, gpu_mem=8000,
-                             det_model_dir='weights/ch_PP-OCRv4_det_infer')
+                             det_model_dir=model_paths[3])
+        self.ocr_recognition = pipeline(Tasks.ocr_recognition, model=model_paths[4])
 
     def _load_yolo_model(self, model_path):
         model = YOLO(model_path)

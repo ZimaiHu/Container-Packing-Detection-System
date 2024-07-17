@@ -1,4 +1,5 @@
 import json
+from functools import partial
 from detectors.CargoLabelDet import CargoLabelDetector
 from detectors.PalletCornerDet import PalletDetector
 from detectors.SealDet import SealDetector
@@ -8,82 +9,75 @@ from detectors.QianhouDet import QianhouDetector
 from containumber.manager import Manager
 from detectors.ZheDangDet import ZheDangDetector
 from detectors.StrapDet import StrapDetector
-with open('detectors/detectors.json', 'r') as file:
-    detectors = json.load(file)
+
+
 class Detector:
     def __init__(self):
-        self.PalletCorner = PalletDetector()
-        self.CargoLabel = CargoLabelDetector()
-        self.Zhedang = ZheDangDetector()
-        self.StrapDet = StrapDetector()
-        self.SealDet = SealDetector()
-        self.ChaituoDet = ChaituoDetector()
-        self.FodsDet = FodsDetector()
-        self.Qianhou = QianhouDetector()
-        # 初始化检测器模型
-        self._load_detector_model()
-        self.ContainerNumberDet = Manager()
+        with open('detectors/detectors.json', 'r') as file:
+            self.detectors_config = json.load(file)
 
-    def _load_detector_model(self):
-        PalletCornerPath=detectors["PalletCorner"]["model_path"]
-        CargoLabelPath = detectors["CargoLabel"]["model_path"]
-        SealDetPath = detectors["Seal"]["model_path"]
-        FodsDetPath = detectors["Fod"]["model_path"]
-        QianhouPath = detectors["Qianhou"]["model_path"]
-        ZhedangPath = detectors["Zhedang"]["model_path"]
-        BangdaiPath = detectors["Strap"]["model_path"]
-        self.CargoLabel.load_model(CargoLabelPath)
-        self.PalletCorner.load_model(PalletCornerPath)
-        self.SealDet.load_model(SealDetPath)
-        self.ChaituoDet.load_model()
-        self.FodsDet.load_model(FodsDetPath)
-        self.Qianhou.load_model(QianhouPath)
-        self.Zhedang.load_model(ZhedangPath)
-        self.StrapDet.load_model(BangdaiPath)
-    # 通用检测器：通过检测任务调用
-    def detect_all(self, img,task):
-        if task == "1":
-            return self.detect_cargo_label_det(img)
-        if task == "2":
-            return self.detect_pallet_corner_det(img)
-        if task == "3":
-            return self.detect_strap_det(img)
-        if task == "4":
-            return self.detect_seal_det(img)
-        if task == "5":
-            return self.detect_container_det(img)
-        if task == "6":
-            return self.detect_chaituo_det(img)
-        if task == "7":
-            return self.detect_fods_det(img)
-        if task == "8":
-            return self.detect_qianhou_det(img)
-        if task == "9":
-            return self.detect_zhedang_det(img)
-    def detect_cargo_label_det(self, img):
-        txt = self.CargoLabel.detect_cargo_label(img)
-        return txt
-    def detect_zhedang_det(self,img):
-        txt = self.Zhedang.detect_zhedang_label(img)
-        return txt
-    def detect_pallet_corner_det(self, img):
-        txt = self.PalletCorner.detect_pallet(img)
-        return txt
-    def detect_strap_det(self, img):
-        txt = self.StrapDet.detect_strap(img)
-        return txt
-    def detect_seal_det(self, img):
-        txt = self.SealDet.detect_seal(img)
-        return txt
-    def detect_container_det(self, img):
-        txt = self.ContainerNumberDet.detect_container_number(img)
-        return txt
-    def detect_chaituo_det(self, img):
-        txt = self.ChaituoDet.detect_chaituo(img)
-        return txt
-    def detect_fods_det(self, img):
-        txt= self.FodsDet.detect_fods(img)
-        return txt
-    def detect_qianhou_det(self, img):
-        txt = self.Qianhou.detect_qianhou(img)
-        return txt
+        self.detector_instances = {
+            'CargoLabel': CargoLabelDetector(),
+            'PalletCorner': PalletDetector(),
+            'Zhedang': ZheDangDetector(),
+            'Strap': StrapDetector(),
+            'Seal': SealDetector(),
+            'Chaituo': ChaituoDetector(),
+            'Fods': FodsDetector(),
+            'Qianhou': QianhouDetector(),
+            'ContainerNumber': Manager()
+        }
+
+        self._load_detector_models()
+
+    def _load_detector_models(self):
+        for name, instance in self.detector_instances.items():
+            if name in self.detectors_config:
+                model_path = self.detectors_config[name]['model_path']
+                instance.load_model(model_path)
+
+    def detect_all(self, img, task):
+        task_mapping = {
+            '1': 'cargo_label',
+            '2': 'pallet_corner',
+            '3': 'strap',
+            '4': 'seal',
+            '5': 'container',
+            '6': 'chaituo',
+            '7': 'fods',
+            '8': 'qianhou',
+            '9': 'zhedang'
+        }
+
+        if task in task_mapping:
+            method_name = f"detect_{task_mapping[task]}"
+            return getattr(self, method_name)(img)
+        else:
+            raise ValueError(f"Unknown task: {task}")
+
+    def detect_cargo_label(self, img):
+        return self.detector_instances['CargoLabel'].detect_cargo_label(img)
+
+    def detect_zhedang(self, img):
+        return self.detector_instances['Zhedang'].detect_zhedang_label(img)
+
+    def detect_pallet_corner(self, img):
+        return self.detector_instances['PalletCorner'].detect_pallet(img)
+
+    def detect_strap(self, img):
+        return self.detector_instances['Strap'].detect_strap(img)
+
+    def detect_seal(self, img):
+        return self.detector_instances['Seal'].detect_seal(img)
+
+    def detect_container(self, img):
+        return self.detector_instances['ContainerNumber'].detect_container_number(img)
+
+    def detect_chaituo(self, img):
+        return self.detector_instances['Chaituo'].detect_chaituo(img)
+
+    def detect_fods(self, img):
+        return self.detector_instances['Fods'].detect_fods(img)
+
+    def detect_qianhou(self, img):
+        return self.detector_instances['Qianhou'].detect_qianhou(img)
