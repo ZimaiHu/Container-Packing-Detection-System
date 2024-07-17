@@ -58,7 +58,6 @@ class ChaituoDetector:
 
                 # 遍历每个结果并提取文本
                 for res in result:
-                    print(res)
                     for line in res:
                         # 追加每行文本（line[1][0]包含文本）
                         all_texts.append(line[1][0])
