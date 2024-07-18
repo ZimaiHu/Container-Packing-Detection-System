@@ -102,6 +102,7 @@ class CargoLabelDetector:
 
     def detect_overlap_ocr(self, boxes: List[Dict], labels: List[Dict], img: np.ndarray) -> List[Dict]:
         overlapping_objects = []
+        assigned_labels = set()
         id_counter = 1
 
         for box in boxes:
@@ -114,8 +115,13 @@ class CargoLabelDetector:
             id_counter += 1
 
             for label in labels:
+                label_id = tuple(label['coordinates'])
+                if label_id in assigned_labels:
+                    continue
+
                 label_polygon = Polygon(self._coordinates_to_points(label['coordinates']))
                 if box_polygon.intersects(label_polygon):
+                    assigned_labels.add(label_id)
                     bounds = label_polygon.bounds
                     label_image = img[int(bounds[1]):int(bounds[3]), int(bounds[0]):int(bounds[2])]
                     label_text, label_type = self._process_label(label_image)
