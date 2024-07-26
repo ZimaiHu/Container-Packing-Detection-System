@@ -235,7 +235,6 @@ class CargoLabelDetector:
             for label in detection['labelingood']:
                 label_xmin, label_ymin, label_xmax, label_ymax = map(int, [label['xmin'], label['ymin'], label['xmax'],
                                                                            label['ymax']])
-                print("label_xmin, label_ymin, label_xmax, label_ymax", label_xmin, label_ymin, label_xmax, label_ymax)
                 cv2.rectangle(image, (label_xmin, label_ymin), (label_xmax, label_ymax), (255, 0, 0), 2)
                 cv2.putText(image, str(label['ocr_result']), (label_xmin, label_ymin - 10),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 0), 2)
