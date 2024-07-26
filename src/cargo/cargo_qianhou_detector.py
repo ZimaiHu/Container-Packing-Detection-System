@@ -163,7 +163,6 @@ class QianhouDetector:
             x1, y1, x2, y2 = map(int, coord_list[0])
             cropped_image = image[y1:y2, x1:x2]
             result = self.ocr_recognition(cropped_image)
-            print("result shouxie", result)
             return result['text'][0] if 'text' in result and result['text'] else ""
 
         except Exception:
