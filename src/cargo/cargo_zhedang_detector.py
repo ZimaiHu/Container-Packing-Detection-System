@@ -192,15 +192,30 @@ class ZheDangDetector:
         label_text = ''.join(re.findall(r'\d+', label_text))
         return label_text, label_type
 
+    # def _crop_and_ocr(self, image: np.ndarray) -> str:
+    #     results = self.models['shouxie'].predict(source=image, show=False, save=False, verbose=False)[0]
+    #     coord_list = results.boxes.xyxy.tolist()
+    #     if coord_list:
+    #         x1, y1, x2, y2 = map(int, coord_list[0])
+    #         cropped_image = image[y1:y2, x1:x2]
+    #         result = self.ocr_recognition(cropped_image)
+    #         return result['text'][0] if 'text' in result and result['text'] else ""
+    #     return ""
+
     def _crop_and_ocr(self, image: np.ndarray) -> str:
-        results = self.models['shouxie'].predict(source=image, show=False, save=False, verbose=False)[0]
-        coord_list = results.boxes.xyxy.tolist()
-        if coord_list:
+        try:
+            results = self.models['shouxie'].predict(source=image, show=False, save=False, verbose=False)[0]
+            coord_list = results.boxes.xyxy.tolist()
+            if not coord_list:
+                return ""
             x1, y1, x2, y2 = map(int, coord_list[0])
             cropped_image = image[y1:y2, x1:x2]
             result = self.ocr_recognition(cropped_image)
+            print("result shouxie", result)
             return result['text'][0] if 'text' in result and result['text'] else ""
-        return ""
+
+        except Exception:
+            return ""
 
     def _format_extracted_number(self, text: str) -> str:
         parts = text.split()
@@ -226,10 +241,13 @@ class ZheDangDetector:
         return ""
 
     def recognize_text_paddleocr(self, image: np.ndarray) -> str:
-        result = self.ocr.ocr(image, cls=True)
-        if not result[0]:
+        try:
+            result = self.ocr.ocr(image, cls=True)
+            if not result[0]:
+                return ""
+            return ' '.join(line[1][0] for res in result if res for line in res)
+        except Exception:
             return ""
-        return ' '.join(line[1][0] for res in result if res for line in res)
 
     def _convert_format(self, original_data: List[Dict]) -> List[Dict]:
         return [
@@ -295,10 +313,10 @@ if __name__ == '__main__':
     # 将 PaddleOCR 对象和手写识别模型传递给 load_ocr_model
     detector.load_ocr_model([paddle_ocr, handwritten_recognition_model])
 
-    result = detector.detect_zhedang_label('../../ceshitu/ceshi/zhedang.jpeg')
+    result = detector.detect_zhedang_label('../../ceshitu/zhedang3.jpg')
     print("result", result)
 
-    image = cv2.imread('../../ceshitu/ceshi/zhedang.jpeg')
+    image = cv2.imread('../../ceshitu/zhedang3.jpg')
     drawn_image = detector.draw_detections(image, result)
     cv2.imwrite('high_quality_output.jpg', drawn_image, [cv2.IMWRITE_PNG_COMPRESSION, 0])
 

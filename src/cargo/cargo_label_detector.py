@@ -157,14 +157,19 @@ class CargoLabelDetector:
         return label_text, label_type
 
     def _crop_and_ocr(self, image: np.ndarray) -> str:
-        results = self.models['shouxie'].predict(source=image, show=False, save=False, verbose=False)[0]
-        coord_list = results.boxes.xyxy.tolist()
-        if coord_list:
+        try:
+            results = self.models['shouxie'].predict(source=image, show=False, save=False, verbose=False)[0]
+            coord_list = results.boxes.xyxy.tolist()
+            if not coord_list:
+                return ""
             x1, y1, x2, y2 = map(int, coord_list[0])
             cropped_image = image[y1:y2, x1:x2]
             result = self.ocr_recognition(cropped_image)
+            print("result shouxie", result)
             return result['text'][0] if 'text' in result and result['text'] else ""
-        return ""
+
+        except Exception:
+            return ""
 
     def _format_extracted_number(self, text: str) -> str:
         parts = text.split()
@@ -190,10 +195,13 @@ class CargoLabelDetector:
         return ""
 
     def recognize_text_paddleocr(self, image: np.ndarray) -> str:
-        result = self.ocr.ocr(image, cls=True)
-        if not result[0]:
+        try:
+            result = self.ocr.ocr(image, cls=True)
+            if not result[0]:
+                return ""
+            return ' '.join(line[1][0] for res in result if res for line in res)
+        except Exception:
             return ""
-        return ' '.join(line[1][0] for res in result if res for line in res)
 
     def _convert_format(self, original_data: List[Dict]) -> List[Dict]:
         return [
@@ -228,6 +236,7 @@ class CargoLabelDetector:
             for label in detection['labelingood']:
                 label_xmin, label_ymin, label_xmax, label_ymax = map(int, [label['xmin'], label['ymin'], label['xmax'],
                                                                            label['ymax']])
+                print("label_xmin, label_ymin, label_xmax, label_ymax", label_xmin, label_ymin, label_xmax, label_ymax)
                 cv2.rectangle(image, (label_xmin, label_ymin), (label_xmax, label_ymax), (255, 0, 0), 2)
                 cv2.putText(image, str(label['ocr_result']), (label_xmin, label_ymin - 10),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 0), 2)
@@ -259,10 +268,10 @@ if __name__ == '__main__':
     # 将 PaddleOCR 对象和手写识别模型传递给 load_ocr_model
     detector.load_ocr_model([paddle_ocr, handwritten_recognition_model])
 
-    result = detector.detect_cargo_label('../../ceshitu/ceshi/zhengpai.jpg')
+    result = detector.detect_cargo_label('../../ceshitu/9.jpg')
     print("result", result)
 
-    image = cv2.imread('../../ceshitu/ceshi/zhengpai.jpg')
+    image = cv2.imread('../../ceshitu/9.jpg')
     drawn_image = detector.draw_detections(image, result)
     cv2.imwrite('high_quality_output.jpg', drawn_image, [cv2.IMWRITE_PNG_COMPRESSION, 0])
 
