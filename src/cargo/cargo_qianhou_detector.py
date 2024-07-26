@@ -165,7 +165,7 @@ class QianhouDetector:
             result = self.ocr_recognition(cropped_image)
             return result['text'][0] if 'text' in result and result['text'] else ""
 
-        except Exception:
+        except BaseException:
             return ""
 
     def _format_extracted_number(self, text: str) -> str:
@@ -197,7 +197,7 @@ class QianhouDetector:
             if not result[0]:
                 return ""
             return ' '.join(line[1][0] for res in result if res for line in res)
-        except Exception:
+        except BaseException:
             return ""
 
     def _convert_format(self, original_data: List[Dict]) -> List[Dict]:
