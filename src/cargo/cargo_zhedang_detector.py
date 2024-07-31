@@ -1,3 +1,4 @@
+import os
 import cv2
 import re
 import logging
@@ -12,8 +13,6 @@ from ultralytics import YOLO
 logging.getLogger("ppocr").setLevel(logging.ERROR)
 
 # 设置环境变量
-import os
-
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
 
@@ -124,7 +123,7 @@ class ZheDangDetector:
                     continue
 
                 label_polygon = Polygon(self._coordinates_to_points(label['coordinates']))
-                if box_polygon.intersects(label_polygon):
+                if box_polygon.contains(label_polygon):  # 只检查完全包含
                     assigned_labels.add(label_id)
                     bounds = label_polygon.bounds
                     label_image = img[int(bounds[1]):int(bounds[3]), int(bounds[0]):int(bounds[2])]
@@ -138,9 +137,48 @@ class ZheDangDetector:
                     overlapping_info['labels'].append(label_info)
                     id_counter += 1
 
-            overlapping_objects.append(overlapping_info)
+            if overlapping_info['labels']:  # 只有当有完全重叠的标签时才添加
+                overlapping_objects.append(overlapping_info)
 
         return overlapping_objects
+
+    # def detect_overlap_ocr(self, boxes: List[Dict], labels: List[Dict], img: np.ndarray) -> List[Dict]:
+    #     overlapping_objects = []
+    #     assigned_labels = set()
+    #     id_counter = 1
+    #
+    #     for box in boxes:
+    #         box_polygon = Polygon(self._coordinates_to_points(box['coordinates']))
+    #         overlapping_info = {
+    #             'goods_id': id_counter,
+    #             'box_coordinates': box['coordinates'],
+    #             'labels': []
+    #         }
+    #         id_counter += 1
+    #
+    #         for label in labels:
+    #             label_id = tuple(label['coordinates'])
+    #             if label_id in assigned_labels:
+    #                 continue
+    #
+    #             label_polygon = Polygon(self._coordinates_to_points(label['coordinates']))
+    #             if box_polygon.intersects(label_polygon):
+    #                 assigned_labels.add(label_id)
+    #                 bounds = label_polygon.bounds
+    #                 label_image = img[int(bounds[1]):int(bounds[3]), int(bounds[0]):int(bounds[2])]
+    #                 label_text, label_type = self._process_label(label_image)
+    #                 label_info = {
+    #                     'label_id': id_counter,
+    #                     'label_coordinates': label['coordinates'],
+    #                     'ocr_result': label_text if label_text else "",
+    #                     'label_type': label_type
+    #                 }
+    #                 overlapping_info['labels'].append(label_info)
+    #                 id_counter += 1
+    #
+    #         overlapping_objects.append(overlapping_info)
+    #
+    #     return overlapping_objects
 
     # def detect_overlap_ocr(self, boxes: List[Dict], labels: List[Dict], img: np.ndarray) -> List[Dict]:
     #     overlapping_objects = []
@@ -172,6 +210,55 @@ class ZheDangDetector:
     #
     #         overlapping_objects.append(overlapping_info)
     #
+    #     return overlapping_objects
+
+    # def detect_overlap_ocr(self, boxes, labels, img):
+    #     overlapping_objects = []
+    #     id_counter = 1  # 用于给 goods 和 labels 分配连续的 ID
+    #
+    #     for box in boxes:
+    #         box_polygon = Polygon(
+    #             [(box['coordinates'][i], box['coordinates'][i + 1]) for i in range(0, len(box['coordinates']), 2)]
+    #         )
+    #         overlapping_info = {
+    #             'goods_id': id_counter,
+    #             'box_coordinates': box['coordinates'],
+    #             'labels': []
+    #         }
+    #         id_counter += 1  # 增加计数器为下一个 ID 做准备
+    #         normal_labels = []
+    #         dismantle_labels = []
+    #         for label in labels:
+    #             # 创建标签多边形
+    #             label_polygon = Polygon(
+    #                 [(label['coordinates'][i], label['coordinates'][i + 1]) for i in
+    #                  range(0, len(label['coordinates']), 2)]
+    #             )
+    #             # 检查重叠
+    #             if box_polygon.intersects(label_polygon):
+    #                 # 截取标签所在图像区域进行OCR
+    #                 bounds = label_polygon.bounds
+    #                 label_image = img[int(bounds[1]):int(bounds[3]), int(bounds[0]):int(bounds[2])]
+    #                 label_text, label_type = self.process_label(label_image)
+    #                 label_info = {
+    #                     'label_id': id_counter,
+    #                     'label_coordinates': label['coordinates'],
+    #                     'ocr_result': label_text if label_text else "",
+    #                     'label_type': label_type
+    #                 }
+    #                 if label_type == '1':
+    #                     normal_labels.append(label_info)
+    #                 else:
+    #                     dismantle_labels.append(label_info)
+    #                 id_counter += 1  # 每添加一个标签，增加计数器
+    #         filtered_labels = []
+    #         if normal_labels:
+    #             normal_labels.sort(key=lambda x: len(x['ocr_result']), reverse=True)
+    #             filtered_labels.append(normal_labels[0])  # 保留最长的正常货物标签
+    #         if dismantle_labels:
+    #             filtered_labels.append(dismantle_labels[0])  # 保留一个拆托标签
+    #         overlapping_info['labels'] = filtered_labels
+    #         overlapping_objects.append(overlapping_info)
     #     return overlapping_objects
 
 
@@ -312,10 +399,10 @@ if __name__ == '__main__':
     # 将 PaddleOCR 对象和手写识别模型传递给 load_ocr_model
     detector.load_ocr_model([paddle_ocr, handwritten_recognition_model])
 
-    result = detector.detect_zhedang_label('../../ceshitu/zhedang3.jpg')
+    result = detector.detect_zhedang_label('../../ceshitu/ceshi/zhedang2.jpg')
     print("result", result)
 
-    image = cv2.imread('../../ceshitu/zhedang3.jpg')
+    image = cv2.imread('../../ceshitu/ceshi/zhedang2.jpg')
     drawn_image = detector.draw_detections(image, result)
     cv2.imwrite('high_quality_output.jpg', drawn_image, [cv2.IMWRITE_PNG_COMPRESSION, 0])
 

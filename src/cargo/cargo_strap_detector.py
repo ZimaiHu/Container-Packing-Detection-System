@@ -138,4 +138,4 @@ if __name__ == '__main__':
     detector.load_model(['../../weights/cargo/cargolabel.pt',
                          '../../weights/cargo/bangdai.pt'
                          ])
-    result = detector.detect_strap('../../ceshitu/bangdai1.jpg', draw=True)
+    result = detector.detect_strap('../../ceshitu/ceshi/bangdai.jpeg', draw=True)
