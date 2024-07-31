@@ -104,6 +104,8 @@ class ZheDangDetector:
         return box_positions, label_positions
 
     def detect_overlap_ocr(self, boxes: List[Dict], labels: List[Dict], img: np.ndarray) -> List[Dict]:
+        # 现在逻辑是：检测箱体，然后挨个看标签属于哪个箱体，一个标签只能属于一个箱体，如果检测过的标签，
+        # 则下个箱体时就不检测了。然后如果一个箱体无标签，则不框了，说明算法有错误，误判了框体。
         overlapping_objects = []
         assigned_labels = set()
         id_counter = 1
@@ -124,6 +126,7 @@ class ZheDangDetector:
 
                 label_polygon = Polygon(self._coordinates_to_points(label['coordinates']))
                 if box_polygon.contains(label_polygon):  # 只检查完全包含
+                    # if box_polygon.intersects(label_polygon): # 相交即可
                     assigned_labels.add(label_id)
                     bounds = label_polygon.bounds
                     label_image = img[int(bounds[1]):int(bounds[3]), int(bounds[0]):int(bounds[2])]
@@ -141,76 +144,6 @@ class ZheDangDetector:
                 overlapping_objects.append(overlapping_info)
 
         return overlapping_objects
-
-    # def detect_overlap_ocr(self, boxes: List[Dict], labels: List[Dict], img: np.ndarray) -> List[Dict]:
-    #     overlapping_objects = []
-    #     assigned_labels = set()
-    #     id_counter = 1
-    #
-    #     for box in boxes:
-    #         box_polygon = Polygon(self._coordinates_to_points(box['coordinates']))
-    #         overlapping_info = {
-    #             'goods_id': id_counter,
-    #             'box_coordinates': box['coordinates'],
-    #             'labels': []
-    #         }
-    #         id_counter += 1
-    #
-    #         for label in labels:
-    #             label_id = tuple(label['coordinates'])
-    #             if label_id in assigned_labels:
-    #                 continue
-    #
-    #             label_polygon = Polygon(self._coordinates_to_points(label['coordinates']))
-    #             if box_polygon.intersects(label_polygon):
-    #                 assigned_labels.add(label_id)
-    #                 bounds = label_polygon.bounds
-    #                 label_image = img[int(bounds[1]):int(bounds[3]), int(bounds[0]):int(bounds[2])]
-    #                 label_text, label_type = self._process_label(label_image)
-    #                 label_info = {
-    #                     'label_id': id_counter,
-    #                     'label_coordinates': label['coordinates'],
-    #                     'ocr_result': label_text if label_text else "",
-    #                     'label_type': label_type
-    #                 }
-    #                 overlapping_info['labels'].append(label_info)
-    #                 id_counter += 1
-    #
-    #         overlapping_objects.append(overlapping_info)
-    #
-    #     return overlapping_objects
-
-    # def detect_overlap_ocr(self, boxes: List[Dict], labels: List[Dict], img: np.ndarray) -> List[Dict]:
-    #     overlapping_objects = []
-    #     id_counter = 1
-    #
-    #     for box in boxes:
-    #         box_polygon = Polygon(self._coordinates_to_points(box['coordinates']))
-    #         overlapping_info = {
-    #             'goods_id': id_counter,
-    #             'box_coordinates': box['coordinates'],
-    #             'labels': []
-    #         }
-    #         id_counter += 1
-    #
-    #         for label in labels:
-    #             label_polygon = Polygon(self._coordinates_to_points(label['coordinates']))
-    #             if box_polygon.intersects(label_polygon):
-    #                 bounds = label_polygon.bounds
-    #                 label_image = img[int(bounds[1]):int(bounds[3]), int(bounds[0]):int(bounds[2])]
-    #                 label_text, label_type = self._process_label(label_image)
-    #                 label_info = {
-    #                     'label_id': id_counter,
-    #                     'label_coordinates': label['coordinates'],
-    #                     'ocr_result': label_text if label_text else "",
-    #                     'label_type': label_type
-    #                 }
-    #                 overlapping_info['labels'].append(label_info)
-    #                 id_counter += 1
-    #
-    #         overlapping_objects.append(overlapping_info)
-    #
-    #     return overlapping_objects
 
     # def detect_overlap_ocr(self, boxes, labels, img):
     #     overlapping_objects = []
