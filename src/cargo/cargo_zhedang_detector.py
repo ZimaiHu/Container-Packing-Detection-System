@@ -212,16 +212,6 @@ class ZheDangDetector:
         label_text = ''.join(re.findall(r'\d+', label_text))
         return label_text, label_type
 
-    # def _crop_and_ocr(self, image: np.ndarray) -> str:
-    #     results = self.models['shouxie'].predict(source=image, show=False, save=False, verbose=False)[0]
-    #     coord_list = results.boxes.xyxy.tolist()
-    #     if coord_list:
-    #         x1, y1, x2, y2 = map(int, coord_list[0])
-    #         cropped_image = image[y1:y2, x1:x2]
-    #         result = self.ocr_recognition(cropped_image)
-    #         return result['text'][0] if 'text' in result and result['text'] else ""
-    #     return ""
-
     def _crop_and_ocr(self, image: np.ndarray) -> str:
         try:
             results = self.models['shouxie'].predict(source=image, show=False, save=False, verbose=False)[0]
@@ -243,12 +233,17 @@ class ZheDangDetector:
         for part in parts:
             number = ''.join(filter(str.isdigit, part))
             if len(number) == 8:
-                valid_numbers.append(part)
                 if '.' in part:
                     dot_part = part
+                    valid_numbers = [part]  # 重置 valid_numbers 只包含带点的部分
+                    break  # 找到带点的部分后立即退出循环
+                elif not dot_part:
+                    valid_numbers.append(part)
+
         if len(valid_numbers) == 2 and dot_part:
             return dot_part
         return ' '.join([''.join(filter(str.isdigit, part)) for part in valid_numbers])
+
 
     def _process_guanjianzi(self, image: np.ndarray) -> str:
         results = self.models['guanjianzi'].predict(source=image, show=False, save=False, verbose=False)[0]
@@ -332,10 +327,10 @@ if __name__ == '__main__':
     # 将 PaddleOCR 对象和手写识别模型传递给 load_ocr_model
     detector.load_ocr_model([paddle_ocr, handwritten_recognition_model])
 
-    result = detector.detect_zhedang_label('../../ceshitu/ceshi/zhedang2.jpg')
+    result = detector.detect_zhedang_label('../../ceshitu/ceshi/chaituo3.jpg')
     print("result", result)
 
-    image = cv2.imread('../../ceshitu/ceshi/zhedang2.jpg')
+    image = cv2.imread('../../ceshitu/ceshi/chaituo3.jpg')
     drawn_image = detector.draw_detections(image, result)
     cv2.imwrite('high_quality_output.jpg', drawn_image, [cv2.IMWRITE_PNG_COMPRESSION, 0])
 

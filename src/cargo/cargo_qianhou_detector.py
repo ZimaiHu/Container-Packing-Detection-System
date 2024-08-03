@@ -140,55 +140,6 @@ class QianhouDetector:
 
         return overlapping_objects
 
-    # def detect_overlap_ocr(self, boxes, labels, img):
-    #     overlapping_objects = []
-    #     id_counter = 1  # 用于给 goods 和 labels 分配连续的 ID
-    #
-    #     for box in boxes:
-    #         box_polygon = Polygon(
-    #             [(box['coordinates'][i], box['coordinates'][i + 1]) for i in range(0, len(box['coordinates']), 2)]
-    #         )
-    #         overlapping_info = {
-    #             'goods_id': id_counter,
-    #             'box_coordinates': box['coordinates'],
-    #             'labels': []
-    #         }
-    #         id_counter += 1  # 增加计数器为下一个 ID 做准备
-    #         normal_labels = []
-    #         dismantle_labels = []
-    #         for label in labels:
-    #             # 创建标签多边形
-    #             label_polygon = Polygon(
-    #                 [(label['coordinates'][i], label['coordinates'][i + 1]) for i in
-    #                  range(0, len(label['coordinates']), 2)]
-    #             )
-    #             # 检查重叠
-    #             if box_polygon.intersects(label_polygon):
-    #                 # 截取标签所在图像区域进行OCR
-    #                 bounds = label_polygon.bounds
-    #                 label_image = img[int(bounds[1]):int(bounds[3]), int(bounds[0]):int(bounds[2])]
-    #                 label_text, label_type = self.process_label(label_image)
-    #                 label_info = {
-    #                     'label_id': id_counter,
-    #                     'label_coordinates': label['coordinates'],
-    #                     'ocr_result': label_text if label_text else "",
-    #                     'label_type': label_type
-    #                 }
-    #                 if label_type == '1':
-    #                     normal_labels.append(label_info)
-    #                 else:
-    #                     dismantle_labels.append(label_info)
-    #                 id_counter += 1  # 每添加一个标签，增加计数器
-    #         filtered_labels = []
-    #         if normal_labels:
-    #             normal_labels.sort(key=lambda x: len(x['ocr_result']), reverse=True)
-    #             filtered_labels.append(normal_labels[0])  # 保留最长的正常货物标签
-    #         if dismantle_labels:
-    #             filtered_labels.append(dismantle_labels[0])  # 保留一个拆托标签
-    #         overlapping_info['labels'] = filtered_labels
-    #         overlapping_objects.append(overlapping_info)
-    #     return overlapping_objects
-
     def _coordinates_to_points(self, coordinates: Tuple) -> List[Tuple[float, float]]:
         return [(coordinates[0], coordinates[1]), (coordinates[2], coordinates[1]),
                 (coordinates[2], coordinates[3]), (coordinates[0], coordinates[3])]
@@ -228,9 +179,13 @@ class QianhouDetector:
         for part in parts:
             number = ''.join(filter(str.isdigit, part))
             if len(number) == 8:
-                valid_numbers.append(part)
                 if '.' in part:
                     dot_part = part
+                    valid_numbers = [part]  # 重置 valid_numbers 只包含带点的部分
+                    break  # 找到带点的部分后立即退出循环
+                elif not dot_part:
+                    valid_numbers.append(part)
+
         if len(valid_numbers) == 2 and dot_part:
             return dot_part
         return ' '.join([''.join(filter(str.isdigit, part)) for part in valid_numbers])
@@ -300,7 +255,7 @@ if __name__ == '__main__':
 
     detector = QianhouDetector()
     detector.load_model([
-        "../../weights/cargo/cargolabel.pt",
+        "../../weights/cargo/qianhou.pt",
         "../../weights/cargo/shouxie.pt",
         "../../weights/cargo/guanjianzi.pt",
         "../../weights/cargo/huowuposun.pt"
@@ -314,10 +269,10 @@ if __name__ == '__main__':
     # 将 PaddleOCR 对象和手写识别模型传递给 load_ocr_model
     detector.load_ocr_model([paddle_ocr, handwritten_recognition_model])
 
-    result = detector.detect_qianhou('../../ceshitu/ceshi/qianhou.jpg')
+    result = detector.detect_qianhou('../../ceshitu/ceshi/qianhou1.jpg')
     print("result", result)
 
-    image = cv2.imread('../../ceshitu/ceshi/qianhou.jpg')
+    image = cv2.imread('../../ceshitu/ceshi/qianhou1.jpg')
     drawn_image = detector.draw_detections(image, result)
     cv2.imwrite('high_quality_output.jpg', drawn_image, [cv2.IMWRITE_PNG_COMPRESSION, 0])
 

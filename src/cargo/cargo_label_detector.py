@@ -230,12 +230,17 @@ class CargoLabelDetector:
         for part in parts:
             number = ''.join(filter(str.isdigit, part))
             if len(number) == 8:
-                valid_numbers.append(part)
                 if '.' in part:
                     dot_part = part
+                    valid_numbers = [part]  # 重置 valid_numbers 只包含带点的部分
+                    break  # 找到带点的部分后立即退出循环
+                elif not dot_part:
+                    valid_numbers.append(part)
+
         if len(valid_numbers) == 2 and dot_part:
             return dot_part
         return ' '.join([''.join(filter(str.isdigit, part)) for part in valid_numbers])
+
 
     def _process_guanjianzi(self, image: np.ndarray) -> str:
         results = self.models['guanjianzi'].predict(source=image, show=False, save=False, verbose=False)[0]
@@ -319,10 +324,10 @@ if __name__ == '__main__':
     # 将 PaddleOCR 对象和手写识别模型传递给 load_ocr_model
     detector.load_ocr_model([paddle_ocr, handwritten_recognition_model])
 
-    result = detector.detect_cargo_label('../../ceshitu/ceshi/zhengpai1.jpg')
+    result = detector.detect_cargo_label('../../ceshitu/ceshi/zhengpai4.jpg')
     print("result", result)
 
-    image = cv2.imread('../../ceshitu/ceshi/zhengpai1.jpg')
+    image = cv2.imread('../../ceshitu/ceshi/zhengpai4.jpg')
     drawn_image = detector.draw_detections(image, result)
     cv2.imwrite('high_quality_output.jpg', drawn_image, [cv2.IMWRITE_PNG_COMPRESSION, 0])
 
