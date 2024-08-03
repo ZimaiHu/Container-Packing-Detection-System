@@ -204,7 +204,7 @@ class CargoLabelDetector:
         else:
             label_text = self._format_extracted_number(label_text).replace(".", "")
             label_type = '1'  # 正常标签
-            if not label_text:
+            if not label_text or len(label_text) > 1:
                 label_text = self._process_guanjianzi(cropped_image)
         label_text = ''.join(re.findall(r'\d+', label_text))
         return label_text, label_type
