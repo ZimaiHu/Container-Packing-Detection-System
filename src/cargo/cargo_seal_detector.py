@@ -150,6 +150,9 @@ class SealDetector:
             if res:
                 for line in res:
                     text = line[1][0]
+                    # 修改这里的文本处理逻辑
+                    if '-' in text:
+                        text = text.split('-')[-1]  # 取 '-' 后面的部分
                     filtered_text = re.sub(r'[^A-Za-z0-9]', '', text)
                     if filtered_text:
                         all_texts.append(filtered_text)
@@ -200,13 +203,23 @@ class SealDetector:
 
 
 if __name__ == '__main__':
-    logging.getLogger("ppocr").setLevel(logging.ERROR)
+    from paddleocr import PaddleOCR
+    from modelscope import pipeline, Tasks
+
     detector = SealDetector()
-    detector.load_model(["../../weights/fengtiao.pt"])
-    result = detector.detect_seal('../../ceshitu/fengtiao2.jpg')
+    detector.load_model(["../../weights/cargo/fengtiao.pt"])
+
+    handwritten_recognition_model = pipeline(Tasks.ocr_recognition,
+                                             model="../../weights/ocr/cv_convnextTiny_ocr-recognition-handwritten_damo")
+    paddle_ocr = PaddleOCR(use_angle_cls=True, lang='en', use_gpu=True, use_mkldnn=False,
+                           det_model_dir="../../weights/ocr/ch_PP-OCRv4_det_infer")
+
+    detector.load_ocr_model(paddle_ocr)
+
+    result = detector.detect_seal('../../ceshitu/else/6947.jpeg')
     print("result:", result)
 
-    image = cv2.imread('../../ceshitu/fengtiao2.jpg')
+    image = cv2.imread('../../ceshitu/else/6947.jpeg')
     drawn_image = detector.draw_detections(image, result)
     cv2.imwrite('high_quality_output.jpg', drawn_image, [cv2.IMWRITE_PNG_COMPRESSION, 0])
 
