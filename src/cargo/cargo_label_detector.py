@@ -204,7 +204,7 @@ class CargoLabelDetector:
         else:
             label_text = self._format_extracted_number(label_text).replace(".", "")
             label_type = '1'  # 正常标签
-            if not label_text or len(label_text) > 1:
+            if not label_text or len(label_text) > 8: # 标识有多个字符
                 label_text = self._process_guanjianzi(cropped_image)
         label_text = ''.join(re.findall(r'\d+', label_text))
         return label_text, label_type
@@ -324,10 +324,10 @@ if __name__ == '__main__':
     # 将 PaddleOCR 对象和手写识别模型传递给 load_ocr_model
     detector.load_ocr_model([paddle_ocr, handwritten_recognition_model])
 
-    result = detector.detect_cargo_label('../../ceshitu/ceshi/zhengpai4.jpg')
+    result = detector.detect_cargo_label('../../ceshitu/fault/zhengpaif2.jpg')
     print("result", result)
 
-    image = cv2.imread('../../ceshitu/ceshi/zhengpai4.jpg')
+    image = cv2.imread('../../ceshitu/fault/zhengpaif2.jpg')
     drawn_image = detector.draw_detections(image, result)
     cv2.imwrite('high_quality_output.jpg', drawn_image, [cv2.IMWRITE_PNG_COMPRESSION, 0])
 
