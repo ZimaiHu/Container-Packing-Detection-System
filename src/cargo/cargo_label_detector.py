@@ -103,6 +103,7 @@ class CargoLabelDetector:
     def detect_overlap_ocr(self, boxes: List[Dict], labels: List[Dict], img: np.ndarray) -> List[Dict]:
         # 现在逻辑是：检测箱体，然后挨个看标签属于哪个箱体，一个标签只能属于一个箱体，如果检测过的标签，
         # 则下个箱体时就不检测了。然后如果一个箱体无标签，则不框了，说明算法有错误，误判了框体。
+        overlap_threshold = 0.8
         overlapping_objects = []
         assigned_labels = set()
         id_counter = 1
@@ -122,20 +123,24 @@ class CargoLabelDetector:
                     continue
 
                 label_polygon = Polygon(self._coordinates_to_points(label['coordinates']))
-                if box_polygon.contains(label_polygon):  # 只检查完全包含
-                # if box_polygon.intersects(label_polygon): # 相交即可
-                    assigned_labels.add(label_id)
-                    bounds = label_polygon.bounds
-                    label_image = img[int(bounds[1]):int(bounds[3]), int(bounds[0]):int(bounds[2])]
-                    label_text, label_type = self._process_label(label_image)
-                    label_info = {
-                        'label_id': id_counter,
-                        'label_coordinates': label['coordinates'],
-                        'ocr_result': label_text if label_text else "",
-                        'label_type': label_type
-                    }
-                    overlapping_info['labels'].append(label_info)
-                    id_counter += 1
+                # if box_polygon.contains(label_polygon):  # 只检查完全包含
+                if box_polygon.intersects(label_polygon):  # 判断是否相交
+                    overlap_ratio = box_polygon.intersection(label_polygon).area / label_polygon.area  # 计算重合度
+
+                    if overlap_ratio >= overlap_threshold:
+                        bounds = label_polygon.bounds
+                        label_image = img[int(bounds[1]):int(bounds[3]), int(bounds[0]):int(bounds[2])]
+                        label_text, label_type = self._process_label(label_image)
+                        label_info = {
+                            'label_id': id_counter,
+                            'label_coordinates': label['coordinates'],
+                            'ocr_result': label_text if label_text else "",
+                            'label_type': label_type
+                        }
+                        overlapping_info['labels'].append(label_info)
+
+                        assigned_labels.add(label_id)
+                        id_counter += 1
 
 
             if overlapping_info['labels']:
@@ -152,7 +157,6 @@ class CargoLabelDetector:
 
                 if not has_overlap:
                     # 如果没有重叠，说明标签没检测到，那就单独把框框出来吧。
-                    # 如果存在重叠，说明标签已经属于别的想提了，该框就是重复框
                     overlapping_objects.append(overlapping_info)
 
         return overlapping_objects
@@ -339,10 +343,10 @@ if __name__ == '__main__':
     # 将 PaddleOCR 对象和手写识别模型传递给 load_ocr_model
     detector.load_ocr_model([paddle_ocr, handwritten_recognition_model])
 
-    result = detector.detect_cargo_label('../../ceshitu/fault/zhengpaif8.jpg')
+    result = detector.detect_cargo_label('../../ceshitu/fault/zhengpaif11.jpg')
     print("result", result)
 
-    image = cv2.imread('../../ceshitu/fault/zhengpaif8.jpg')
+    image = cv2.imread('../../ceshitu/fault/zhengpaif11.jpg')
     drawn_image = detector.draw_detections(image, result)
     cv2.imwrite('high_quality_output.jpg', drawn_image, [cv2.IMWRITE_PNG_COMPRESSION, 0])
 

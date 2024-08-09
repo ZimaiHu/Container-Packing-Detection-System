@@ -104,6 +104,7 @@ class QianhouDetector:
         overlapping_objects = []
         assigned_labels = set()
         id_counter = 1
+        overlap_threshold = 0.8
 
         for box in boxes:
             box_polygon = Polygon(self._coordinates_to_points(box['coordinates']))
@@ -120,20 +121,24 @@ class QianhouDetector:
                     continue
 
                 label_polygon = Polygon(self._coordinates_to_points(label['coordinates']))
-                if box_polygon.contains(label_polygon):  # 只检查完全包含
-                    # if box_polygon.intersects(label_polygon): # 相交即可
-                    assigned_labels.add(label_id)
-                    bounds = label_polygon.bounds
-                    label_image = img[int(bounds[1]):int(bounds[3]), int(bounds[0]):int(bounds[2])]
-                    label_text, label_type = self._process_label(label_image)
-                    label_info = {
-                        'label_id': id_counter,
-                        'label_coordinates': label['coordinates'],
-                        'ocr_result': label_text if label_text else "",
-                        'label_type': label_type
-                    }
-                    overlapping_info['labels'].append(label_info)
-                    id_counter += 1
+                # if box_polygon.contains(label_polygon):  # 只检查完全包含
+                if box_polygon.intersects(label_polygon):  # 判断是否相交
+                    overlap_ratio = box_polygon.intersection(label_polygon).area / label_polygon.area  # 计算重合度
+
+                    if overlap_ratio >= overlap_threshold:
+                        bounds = label_polygon.bounds
+                        label_image = img[int(bounds[1]):int(bounds[3]), int(bounds[0]):int(bounds[2])]
+                        label_text, label_type = self._process_label(label_image)
+                        label_info = {
+                            'label_id': id_counter,
+                            'label_coordinates': label['coordinates'],
+                            'ocr_result': label_text if label_text else "",
+                            'label_type': label_type
+                        }
+                        overlapping_info['labels'].append(label_info)
+
+                        assigned_labels.add(label_id)
+                        id_counter += 1
 
             if overlapping_info['labels']:
                 # 如果检测到有标签，直接添加到结果列表
