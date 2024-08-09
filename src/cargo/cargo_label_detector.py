@@ -137,8 +137,23 @@ class CargoLabelDetector:
                     overlapping_info['labels'].append(label_info)
                     id_counter += 1
 
-            if overlapping_info['labels']:  # 只有当有完全重叠的标签时才添加
+
+            if overlapping_info['labels']:
+                # 如果检测到有标签，直接添加到结果列表
                 overlapping_objects.append(overlapping_info)
+            else:
+                # 如果没有检测到标签，检查框体是否与任何标签重叠
+                box_polygon = Polygon(self._coordinates_to_points(box['coordinates']))
+
+                has_overlap = any(
+                    box_polygon.intersects(Polygon(self._coordinates_to_points(label['coordinates'])))
+                    for label in labels
+                )
+
+                if not has_overlap:
+                    # 如果没有重叠，说明标签没检测到，那就单独把框框出来吧。
+                    # 如果存在重叠，说明标签已经属于别的想提了，该框就是重复框
+                    overlapping_objects.append(overlapping_info)
 
         return overlapping_objects
 
@@ -324,10 +339,10 @@ if __name__ == '__main__':
     # 将 PaddleOCR 对象和手写识别模型传递给 load_ocr_model
     detector.load_ocr_model([paddle_ocr, handwritten_recognition_model])
 
-    result = detector.detect_cargo_label('../../ceshitu/fault/zhengpaif2.jpg')
+    result = detector.detect_cargo_label('../../ceshitu/fault/zhengpaif8.jpg')
     print("result", result)
 
-    image = cv2.imread('../../ceshitu/fault/zhengpaif2.jpg')
+    image = cv2.imread('../../ceshitu/fault/zhengpaif8.jpg')
     drawn_image = detector.draw_detections(image, result)
     cv2.imwrite('high_quality_output.jpg', drawn_image, [cv2.IMWRITE_PNG_COMPRESSION, 0])
 
