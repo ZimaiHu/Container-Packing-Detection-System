@@ -1,6 +1,6 @@
 import os
-import cv2
 import re
+import cv2
 import logging
 import numpy as np
 import pandas as pd
@@ -9,10 +9,10 @@ from shapely.geometry import Polygon
 from typing import List, Dict, Tuple
 from ultralytics import YOLO
 
-# 设置日志级别
+# Set logging level
 logging.getLogger("ppocr").setLevel(logging.ERROR)
 
-# 设置环境变量
+# Set environment variable
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
 
@@ -25,7 +25,7 @@ class ZheDangDetector:
     def load_model(self, model_paths: List[str]):
         _dummy_image = np.zeros((640, 640, 3), dtype=np.uint8)
 
-        # 使用循环加载YOLO模型
+        # Load YOLO models
         self.models = {
             'zhedang': YOLO(model_paths[0]),
             'shouxie': YOLO(model_paths[1]),
@@ -35,11 +35,6 @@ class ZheDangDetector:
         for model in self.models.values():
             model.predict(_dummy_image, verbose=False)
 
-        # 加载OCR模型
-        # self.ocr = PaddleOCR(use_angle_cls=True, lang='en', use_gpu=True, gpu_mem=8000,
-        #                      det_model_dir=model_paths[4])
-        # self.ocr_recognition = pipeline(Tasks.ocr_recognition, model=model_paths[5])
-
     def load_ocr_model(self, model_obj):
         self.ocr = model_obj[0]
         self.ocr_recognition = model_obj[1]
@@ -48,15 +43,17 @@ class ZheDangDetector:
         image = cv2.imread(img_path)
         height, width = image.shape[:2]
 
-        results = self.models['zhedang'].predict(source=image, show=False, device=0, save=False, verbose=False)
+        results = self.models['zhedang'].predict(source=image, show=False, save=False, verbose=False)
         detected_objects = self._process_yolo_results(results[0])
 
         box_positions, label_positions = self._extract_object_info(detected_objects, min_confidence)
+        # print("box_positions", box_positions)
+        # print("label_positions", label_positions)
 
         overlapping_objects = self.detect_overlap_ocr(box_positions, label_positions, image)
         results = self._convert_format(overlapping_objects)
 
-        # 对每个物品进行状态检测
+        # Detect state for each item
         for item in results:
             if 'goods_id' in item:
                 ymin, ymax = max(0, int(item['ymin'])), min(height, max(0, int(item['ymax'])))
@@ -73,14 +70,14 @@ class ZheDangDetector:
         return results
 
     def _process_yolo_results(self, result) -> pd.DataFrame:
-        coordinates = result.obb.xyxyxyxy.tolist()
-        confidences = result.obb.conf.tolist()
-        classes = result.obb.cls.tolist()
-        data = [
-            coord[0] + coord[1] + coord[2] + coord[3] + [confidences[i], int(classes[i])]
-            for i, coord in enumerate(coordinates)
-        ]
-        return pd.DataFrame(data, columns=['x1', 'y1', 'x2', 'y2', 'x3', 'y3', 'x4', 'y4', 'confidence', 'class'])
+        return pd.DataFrame(
+            [coord + [conf, int(cls)] for coord, conf, cls in zip(
+                result.boxes.xyxy.tolist(),
+                result.boxes.conf.tolist(),
+                result.boxes.cls.tolist()
+            )],
+            columns=['xmin', 'ymin', 'xmax', 'ymax', 'confidence', 'class']
+        )
 
     def _extract_object_info(self, detected_objects: pd.DataFrame, min_confidence: float) -> Tuple[
         List[Dict], List[Dict]]:
@@ -90,7 +87,7 @@ class ZheDangDetector:
         for index, row in detected_objects.iterrows():
             if row['confidence'] > min_confidence:
                 object_info = {
-                    'coordinates': tuple(row[['x1', 'y1', 'x2', 'y2', 'x3', 'y3', 'x4', 'y4']]),
+                    'coordinates': (row['xmin'], row['ymin'], row['xmax'], row['ymax']),
                     'confidence': row['confidence']
                 }
 
@@ -145,6 +142,7 @@ class ZheDangDetector:
                         assigned_labels.add(label_id)
                         id_counter += 1
 
+
             if overlapping_info['labels']:
                 # 如果检测到有标签，直接添加到结果列表
                 overlapping_objects.append(overlapping_info)
@@ -159,74 +157,24 @@ class ZheDangDetector:
 
                 if not has_overlap:
                     # 如果没有重叠，说明标签没检测到，那就单独把框框出来吧。
-                    # 如果存在重叠，说明标签已经属于别的想提了，该框就是重复框
                     overlapping_objects.append(overlapping_info)
 
         return overlapping_objects
 
-    # def detect_overlap_ocr(self, boxes, labels, img):
-    #     overlapping_objects = []
-    #     id_counter = 1  # 用于给 goods 和 labels 分配连续的 ID
-    #
-    #     for box in boxes:
-    #         box_polygon = Polygon(
-    #             [(box['coordinates'][i], box['coordinates'][i + 1]) for i in range(0, len(box['coordinates']), 2)]
-    #         )
-    #         overlapping_info = {
-    #             'goods_id': id_counter,
-    #             'box_coordinates': box['coordinates'],
-    #             'labels': []
-    #         }
-    #         id_counter += 1  # 增加计数器为下一个 ID 做准备
-    #         normal_labels = []
-    #         dismantle_labels = []
-    #         for label in labels:
-    #             # 创建标签多边形
-    #             label_polygon = Polygon(
-    #                 [(label['coordinates'][i], label['coordinates'][i + 1]) for i in
-    #                  range(0, len(label['coordinates']), 2)]
-    #             )
-    #             # 检查重叠
-    #             if box_polygon.intersects(label_polygon):
-    #                 # 截取标签所在图像区域进行OCR
-    #                 bounds = label_polygon.bounds
-    #                 label_image = img[int(bounds[1]):int(bounds[3]), int(bounds[0]):int(bounds[2])]
-    #                 label_text, label_type = self.process_label(label_image)
-    #                 label_info = {
-    #                     'label_id': id_counter,
-    #                     'label_coordinates': label['coordinates'],
-    #                     'ocr_result': label_text if label_text else "",
-    #                     'label_type': label_type
-    #                 }
-    #                 if label_type == '1':
-    #                     normal_labels.append(label_info)
-    #                 else:
-    #                     dismantle_labels.append(label_info)
-    #                 id_counter += 1  # 每添加一个标签，增加计数器
-    #         filtered_labels = []
-    #         if normal_labels:
-    #             normal_labels.sort(key=lambda x: len(x['ocr_result']), reverse=True)
-    #             filtered_labels.append(normal_labels[0])  # 保留最长的正常货物标签
-    #         if dismantle_labels:
-    #             filtered_labels.append(dismantle_labels[0])  # 保留一个拆托标签
-    #         overlapping_info['labels'] = filtered_labels
-    #         overlapping_objects.append(overlapping_info)
-    #     return overlapping_objects
-
-
     def _coordinates_to_points(self, coordinates: Tuple) -> List[Tuple[float, float]]:
-        return [(coordinates[i], coordinates[i + 1]) for i in range(0, len(coordinates), 2)]
+        return [(coordinates[0], coordinates[1]), (coordinates[2], coordinates[1]),
+                (coordinates[2], coordinates[3]), (coordinates[0], coordinates[3])]
 
     def _process_label(self, cropped_image: np.ndarray) -> Tuple[str, str]:
         label_text = self.recognize_text_paddleocr(cropped_image)
         k = label_text.replace(" ", "")
         if not label_text or len(k) < 5:
-            label_text = self._crop_and_ocr(cropped_image)
             label_type = '0'  # 拆托标签
+            label_text = self._crop_and_ocr(cropped_image)
         else:
-            label_text = self._format_extracted_number(label_text).replace(".", "")
             label_type = '1'  # 正常标签
-            if not label_text or len(label_text) > 8:
+            label_text = self._format_extracted_number(label_text).replace(".", "")
+            if not label_text or len(label_text) > 8: # 标识有多个字符
                 label_text = self._process_guanjianzi(cropped_image)
         label_text = ''.join(re.findall(r'\d+', label_text))
         return label_text, label_type
@@ -242,7 +190,7 @@ class ZheDangDetector:
             result = self.ocr_recognition(cropped_image)
             return result['text'][0] if 'text' in result and result['text'] else ""
 
-        except BaseException:
+        except BaseException :
             return ""
 
     def _format_extracted_number(self, text: str) -> str:
@@ -279,25 +227,25 @@ class ZheDangDetector:
             if not result[0]:
                 return ""
             return ' '.join(line[1][0] for res in result if res for line in res)
-        except BaseException:
+        except BaseException :
             return ""
 
     def _convert_format(self, original_data: List[Dict]) -> List[Dict]:
         return [
             {
                 'goods_id': item['goods_id'],
-                'xmin': min(item['box_coordinates'][0::2]),
-                'ymin': min(item['box_coordinates'][1::2]),
-                'xmax': max(item['box_coordinates'][0::2]),
-                'ymax': max(item['box_coordinates'][1::2]),
+                'xmin': item['box_coordinates'][0],
+                'ymin': item['box_coordinates'][1],
+                'xmax': item['box_coordinates'][2],
+                'ymax': item['box_coordinates'][3],
                 'state': 1,
                 'labelingood': [
                     {
                         'label_id': label['label_id'],
-                        'xmin': min(label['label_coordinates'][0::2]),
-                        'ymin': min(label['label_coordinates'][1::2]),
-                        'xmax': max(label['label_coordinates'][0::2]),
-                        'ymax': max(label['label_coordinates'][1::2]),
+                        'xmin': label['label_coordinates'][0],
+                        'ymin': label['label_coordinates'][1],
+                        'xmax': label['label_coordinates'][2],
+                        'ymax': label['label_coordinates'][3],
                         'ocr_result': label['ocr_result']
                     } for label in item['labels']
                 ]
@@ -341,15 +289,15 @@ if __name__ == '__main__':
     handwritten_recognition_model = pipeline(Tasks.ocr_recognition,
                                              model="../../weights/ocr/cv_convnextTiny_ocr-recognition-handwritten_damo")
     paddle_ocr = PaddleOCR(use_angle_cls=True, lang='en', use_gpu=True, use_mkldnn=False,
-                                det_model_dir="../../weights/ocr/ch_PP-OCRv4_det_infer")
+                                det_model_dir                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  ="../../weights/ocr/ch_PP-OCRv4_det_infer")
 
     # 将 PaddleOCR 对象和手写识别模型传递给 load_ocr_model
     detector.load_ocr_model([paddle_ocr, handwritten_recognition_model])
 
-    result = detector.detect_zhedang_label('../../ceshitu/fault/zhengpaif8.jpg')
+    result = detector.detect_zhedang_label('../../ceshitu/else/zhedang3.jpg')
     print("result", result)
 
-    image = cv2.imread('../../ceshitu/fault/zhengpaif8.jpg')
+    image = cv2.imread('../../ceshitu/else/zhedang3.jpg')
     drawn_image = detector.draw_detections(image, result)
     cv2.imwrite('high_quality_output.jpg', drawn_image, [cv2.IMWRITE_PNG_COMPRESSION, 0])
 

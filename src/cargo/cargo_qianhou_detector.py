@@ -288,10 +288,10 @@ if __name__ == '__main__':
     # 将 PaddleOCR 对象和手写识别模型传递给 load_ocr_model
     detector.load_ocr_model([paddle_ocr, handwritten_recognition_model])
 
-    result = detector.detect_qianhou('../../ceshitu/ceshi/qianhou1.jpg')
+    result = detector.detect_qianhou('../../ceshitu/fault/zhengpaif47.jpg')
     print("result", result)
 
-    image = cv2.imread('../../ceshitu/ceshi/qianhou1.jpg')
+    image = cv2.imread('../../ceshitu/fault/zhengpaif47.jpg')
     drawn_image = detector.draw_detections(image, result)
     cv2.imwrite('high_quality_output.jpg', drawn_image, [cv2.IMWRITE_PNG_COMPRESSION, 0])
 

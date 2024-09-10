@@ -218,11 +218,11 @@ class CargoLabelDetector:
         label_text = self.recognize_text_paddleocr(cropped_image)
         k = label_text.replace(" ", "")
         if not label_text or len(k) < 5:
-            label_text = self._crop_and_ocr(cropped_image)
             label_type = '0'  # 拆托标签
+            label_text = self._crop_and_ocr(cropped_image)
         else:
-            label_text = self._format_extracted_number(label_text).replace(".", "")
             label_type = '1'  # 正常标签
+            label_text = self._format_extracted_number(label_text).replace(".", "")
             if not label_text or len(label_text) > 8: # 标识有多个字符
                 label_text = self._process_guanjianzi(cropped_image)
         label_text = ''.join(re.findall(r'\d+', label_text))
@@ -338,15 +338,15 @@ if __name__ == '__main__':
     handwritten_recognition_model = pipeline(Tasks.ocr_recognition,
                                              model="../../weights/ocr/cv_convnextTiny_ocr-recognition-handwritten_damo")
     paddle_ocr = PaddleOCR(use_angle_cls=True, lang='en', use_gpu=True, use_mkldnn=False,
-                                det_model_dir="../../weights/ocr/ch_PP-OCRv4_det_infer")
+                                det_model_dir                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  ="../../weights/ocr/ch_PP-OCRv4_det_infer")
 
     # 将 PaddleOCR 对象和手写识别模型传递给 load_ocr_model
     detector.load_ocr_model([paddle_ocr, handwritten_recognition_model])
 
-    result = detector.detect_cargo_label('../../ceshitu/fault/zhengpaif11.jpg')
+    result = detector.detect_cargo_label('../../ceshitu/fault/zhengpaif47.jpg')
     print("result", result)
 
-    image = cv2.imread('../../ceshitu/fault/zhengpaif11.jpg')
+    image = cv2.imread('../../ceshitu/fault/zhengpaif47.jpg')
     drawn_image = detector.draw_detections(image, result)
     cv2.imwrite('high_quality_output.jpg', drawn_image, [cv2.IMWRITE_PNG_COMPRESSION, 0])
 
