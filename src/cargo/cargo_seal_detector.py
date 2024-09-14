@@ -159,16 +159,41 @@ class SealDetector:
         return ' '.join(all_texts)
 
     # 挑选文字
+    # def extract_useful_text(self, ocr_results):
+    #     pattern = r'\b(?:[A-Z][A-Z0-9]{6,}\d|\d{8,})\b'
+    #     matched_texts = []
+    #     for text in ocr_results:
+    #         matches = re.findall(pattern, text)
+    #         matched_texts.extend(matches)
+    #     if not matched_texts:
+    #         return ""
+    #     counter = Counter(matched_texts)
+    #     return counter.most_common(1)[0][0]
+
     def extract_useful_text(self, ocr_results):
+        # 原始的匹配模式
         pattern = r'\b(?:[A-Z][A-Z0-9]{6,}\d|\d{8,})\b'
         matched_texts = []
+        # 遍历 OCR 结果，寻找匹配的文本
         for text in ocr_results:
             matches = re.findall(pattern, text)
             matched_texts.extend(matches)
-        if not matched_texts:
-            return ""
-        counter = Counter(matched_texts)
-        return counter.most_common(1)[0][0]
+        # 如果找到了符合原始模式的文本，返回出现次数最多的那个
+        if matched_texts:
+            counter = Counter(matched_texts)
+            return counter.most_common(1)[0][0]
+        # 如果没有符合原始模式的文本，寻找包含字母和数字的文本
+        alpha_num_pattern = r'\b\w*\d\w*\b'
+        alpha_num_texts = []
+        for text in ocr_results:
+            matches = re.findall(alpha_num_pattern, text)
+            alpha_num_texts.extend(matches)
+        # 如果找到了包含字母和数字的文本，返回出现次数最多的那个
+        if alpha_num_texts:
+            counter = Counter(alpha_num_texts)
+            return counter.most_common(1)[0][0]
+        # 如果没有任何符合的文本，返回空字符串
+        return ""
 
     def draw_detections(self, image, results):
         """
@@ -216,10 +241,10 @@ if __name__ == '__main__':
 
     detector.load_ocr_model(paddle_ocr)
 
-    result = detector.detect_seal('../../ceshitu/else/6947.jpeg')
+    result = detector.detect_seal('../../ceshitu/ceshi/fengtiao.jpg')
     print("result:", result)
 
-    image = cv2.imread('../../ceshitu/else/6947.jpeg')
+    image = cv2.imread('../../ceshitu/ceshi/fengtiao.jpg')
     drawn_image = detector.draw_detections(image, result)
     cv2.imwrite('high_quality_output.jpg', drawn_image, [cv2.IMWRITE_PNG_COMPRESSION, 0])
 
