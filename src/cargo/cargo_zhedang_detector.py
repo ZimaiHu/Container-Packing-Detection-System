@@ -131,6 +131,11 @@ class ZheDangDetector:
                         bounds = label_polygon.bounds
                         label_image = img[int(bounds[1]):int(bounds[3]), int(bounds[0]):int(bounds[2])]
                         label_text, label_type = self._process_label(label_image)
+
+                        # 跳过 label_type 为 '2' 的标签
+                        if label_type == '2':
+                            continue  # 如果是字母标签，不添加这个框
+
                         label_info = {
                             'label_id': id_counter,
                             'label_coordinates': label['coordinates'],
@@ -167,10 +172,18 @@ class ZheDangDetector:
 
     def _process_label(self, cropped_image: np.ndarray) -> Tuple[str, str]:
         label_text = self.recognize_text_paddleocr(cropped_image)
+
         k = label_text.replace(" ", "")
         if not label_text or len(k) < 5:
-            label_type = '0'  # 拆托标签
-            label_text = self._crop_and_ocr(cropped_image)
+            # Perform a wine glass label check before setting to 拆托标签
+            if len(k) == 1 and re.match(r'[A-Za-z]', k):
+                label_type = '2'  # 字母标签
+                label_text = ''  # No need for label text, as it's identified by the symbol
+            else:
+                label_type = '0'  # 拆托标签
+                label_text = self._crop_and_ocr(cropped_image)
+            # label_type = '0'  # 拆托标签
+            # label_text = self._crop_and_ocr(cropped_image)
         else:
             label_type = '1'  # 正常标签
             label_text = self._format_extracted_number(label_text).replace(".", "")
@@ -294,10 +307,10 @@ if __name__ == '__main__':
     # 将 PaddleOCR 对象和手写识别模型传递给 load_ocr_model
     detector.load_ocr_model([paddle_ocr, handwritten_recognition_model])
 
-    result = detector.detect_zhedang_label('../../ceshitu/else/zhedang3.jpg')
+    result = detector.detect_zhedang_label('../../ceshitu/fault/zhedang2.jpg')
     print("result", result)
 
-    image = cv2.imread('../../ceshitu/else/zhedang3.jpg')
+    image = cv2.imread('../../ceshitu/fault/zhedang2.jpg')
     drawn_image = detector.draw_detections(image, result)
     cv2.imwrite('high_quality_output.jpg', drawn_image, [cv2.IMWRITE_PNG_COMPRESSION, 0])
 
