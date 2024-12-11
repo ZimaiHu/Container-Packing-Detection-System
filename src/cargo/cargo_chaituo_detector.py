@@ -22,7 +22,6 @@ class ChaituoDetector:
     # 主探测函数
     def detect_chaituo(self, img_path):
         label_text = self.recognize_text_paddleocr(img_path)
-        print("label_text", label_text)
         formatted_number = self.format_extracted_number(label_text)
         formatted_number = formatted_number.replace(".", "")
         label_text = ''.join(re.findall(r'\d+', formatted_number))
@@ -73,16 +72,43 @@ class ChaituoDetector:
 
     # 正则变换
     def format_extracted_number(self, text):
-        """ 从文本中提取并格式化一个带有两个小数点的数字序列 """
+        """
+        从文本中提取并格式化一个带有两个小数点的数字序列，优先匹配 'kg' 前面的数字
+        """
+        # 匹配所有符合格式的数字序列
         matches = re.findall(r'(?<!\d)\d+\.\d+\.\d+(?!\d)', text)
-        if matches:
-            match = matches[0]
-            parts = match.split('.')
-            if len(parts) == 3:
-                # 格式化提取的数字为: 三位数.三位数.两位数
-                formatted_number = f"{parts[0][-3:]}.{parts[1]}.{parts[2][:2]}"
-                return formatted_number
-        return ""  # 如果没有匹配项，则返回空字符串
+        if not matches:
+            return ""  # 如果没有匹配项，直接返回空字符串
+
+        # 查找 "kg" 的位置
+        kg_index = text.find("kg")
+        if kg_index != -1:
+            # 如果找到 "kg"，优先选择 "kg" 前最近的数字
+            closest_match = None
+            closest_distance = float('inf')
+            for match in matches:
+                match_index = text.find(match)
+                if match_index != -1 and match_index < kg_index:
+                    # 计算距离
+                    distance = kg_index - match_index
+                    if distance < closest_distance:
+                        closest_distance = distance
+                        closest_match = match
+
+            # 如果找到符合条件的 "kg" 前数字，格式化并返回
+            if closest_match:
+                parts = closest_match.split('.')
+                if len(parts) == 3:
+                    return f"{parts[0][-3:]}.{parts[1]}.{parts[2][:2]}"
+
+        # 如果没有找到符合条件的数字或没有 "kg"，返回第一个匹配
+        match = matches[0]
+        parts = match.split('.')
+        if len(parts) == 3:
+            return f"{parts[0][-3:]}.{parts[1]}.{parts[2][:2]}"
+
+        return ""  # 如果没有符合条件的，返回空字符串
+
 
 if __name__ == '__main__':
     import cv2
@@ -95,13 +121,11 @@ if __name__ == '__main__':
     paddle_ocr = PaddleOCR(use_angle_cls=True, lang='en', use_gpu=True, use_mkldnn=False,
                            det_model_dir="../../weights/ocr/ch_PP-OCRv4_det_infer")
 
-    print("paddle_ocr", paddle_ocr)
-
     # 将 PaddleOCR 对象传递给 load_ocr_model
     detector.load_ocr_model(paddle_ocr)
 
     # 测试图片路径
-    img_path = '../../ceshitu/fault/bupai2.jpg'  # 请根据需要修改为实际的图片路径
+    img_path = '../../ceshitu/fault/bupaiceshi.jpg'  # 请根据需要修改为实际的图片路径
 
     # 读取图像
     image = cv2.imread(img_path)
