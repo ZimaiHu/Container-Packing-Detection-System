@@ -239,6 +239,7 @@ if __name__ == '__main__':
     paddle_ocr = PaddleOCR(use_angle_cls=True, lang='en', use_gpu=True, use_mkldnn=False,
                            det_model_dir="../../weights/ocr/ch_PP-OCRv4_det_infer")
 
+
     detector.load_ocr_model(paddle_ocr)
 
     result = detector.detect_seal('../../ceshitu/ceshi/fengtiao.jpg')
